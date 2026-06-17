@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "name": "NLJR Source Registry",
+    "description": "Local source list for Not Long; Just Read daily feed signals.",
+    "updatedAt": "2026-06-16"
+  },
+  "sources": [
+    {
+      "id": "manual-spatial-intelligence",
+      "name": "From Words to Worlds: Spatial Intelligence is AI's Next Frontier",
+      "sourceMode": "manual_inbox",
+      "type": "article",
+      "status": "active",
+      "priority": "high",
+      "relevance": ["Strategy", "AI", "Product"],
+      "tags": ["spatial-intelligence", "world-models", "ai-frontier"],
+      "notes": "Manual source captured as a daily signal about spatial intelligence and world models.",
+      "url": "https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence",
+      "archiveUrl": "https://drfeifei.substack.com/archive",
+      "sourceConfidence": "verified_post",
+      "capturedAt": "2026-06-16",
+      "publishedAt": "2025-11-10",
+      "sourceName": "Dr. Fei-Fei Li"
+    },
+    {
+      "id": "subscription-anthropic-engineering",
+      "name": "Anthropic Engineering",
+      "sourceMode": "subscription",
+      "type": "blog",
+      "status": "active",
+      "priority": "high",
+      "relevance": ["AI", "Engineering", "Product"],
+      "tags": ["ai", "engineering", "frontier-models"],
+      "notes": "Read posts from Anthropic's public engineering page for NLJR.",
+      "url": "https://www.anthropic.com/engineering",
+      "archiveUrl": "https://www.anthropic.com/engineering",
+      "sourceConfidence": "verified_archive"
+    },
+    {
+      "id": "subscription-a16z",
+      "name": "a16z",
+      "sourceMode": "subscription",
+      "type": "newsletter",
+      "status": "active",
+      "priority": "medium",
+      "relevance": ["Strategy", "Startups"],
+      "tags": ["venture", "ai", "startups"],
+      "notes": "Read posts from the public archive page for NLJR.",
+      "url": "https://www.a16z.news/",
+      "archiveUrl": "https://www.a16z.news/archive",
+      "sourceConfidence": "verified_archive"
+    },
+    {
+      "id": "source-to-confirm",
+      "name": "Example source to confirm",
+      "sourceMode": "subscription",
+      "type": "newsletter",
+      "status": "active",
+      "priority": "medium",
+      "relevance": ["Product"],
+      "tags": ["example"],
+      "notes": "This source is saved but will be skipped until a URL or archive URL is confirmed.",
+      "url": "",
+      "archiveUrl": "",
+      "sourceConfidence": "needs_url_confirmation"
+    }
+  ]
+}

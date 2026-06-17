@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Not Long; Just Read</title>
+    <link rel="stylesheet" href="/ui/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Local-first daily brief</p>
+        <h1>NLJR</h1>
+      </div>
+      <button id="generateButton" type="button">Generate Today</button>
+    </header>
+
+    <main>
+      <section class="status-strip" id="healthStrip"></section>
+
+      <section class="band">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Today</p>
+            <h2>Not Long; Just Read</h2>
+          </div>
+          <span class="date-pill" id="todayDate">Not generated</span>
+        </div>
+        <div class="item-grid" id="todayItems"></div>
+      </section>
+
+      <section class="band two-column">
+        <div>
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Archive</p>
+              <h2>Daily snapshots</h2>
+            </div>
+          </div>
+          <div class="archive-list" id="archiveList"></div>
+        </div>
+        <div>
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">Sources</p>
+              <h2>Registry health</h2>
+            </div>
+          </div>
+          <div class="source-list" id="sourceList"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/ui/app.js"></script>
+  </body>
+</html>

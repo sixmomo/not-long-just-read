@@ -1,0 +1,94 @@
+{
+  "today": {
+    "date": "2026-06-16",
+    "status": "generated",
+    "generatedAt": "2026-06-17T00:25:34.008265+00:00",
+    "items": [
+      {
+        "id": "2026-06-16-manual-spatial-intelligence-1",
+        "sourceId": "manual-spatial-intelligence",
+        "sourceName": "Dr. Fei-Fei Li",
+        "title": "From Words to Worlds: Spatial Intelligence is AI's Next Frontier",
+        "url": "https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence",
+        "publishedAt": "2025-11-10",
+        "summary": "Manual source captured as a daily signal about spatial intelligence and world models.",
+        "whyItMatters": "This was explicitly added as a manual signal.",
+        "relevance": [
+          "Strategy",
+          "AI",
+          "Product"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal"
+        ],
+        "topicAngle": "Manual source captured as a daily signal about spatial intelligence and world models.",
+        "priority": "high"
+      },
+      {
+        "id": "2026-06-16-subscription-anthropic-engineering-2",
+        "sourceId": "subscription-anthropic-engineering",
+        "sourceName": "Anthropic Engineering",
+        "title": "Archive scan ready",
+        "url": "https://www.anthropic.com/engineering",
+        "publishedAt": "",
+        "summary": "Use the public archive source for today's scan: https://www.anthropic.com/engineering",
+        "whyItMatters": "This verified source is ready for recurring NLJR scanning.",
+        "relevance": [
+          "AI",
+          "Engineering",
+          "Product"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal"
+        ],
+        "topicAngle": "Read posts from Anthropic's public engineering page for NLJR.",
+        "priority": "high"
+      },
+      {
+        "id": "2026-06-16-subscription-a16z-3",
+        "sourceId": "subscription-a16z",
+        "sourceName": "a16z",
+        "title": "Archive scan ready",
+        "url": "https://www.a16z.news/",
+        "publishedAt": "",
+        "summary": "Use the public archive source for today's scan: https://www.a16z.news/archive",
+        "whyItMatters": "This verified source is ready for recurring NLJR scanning.",
+        "relevance": [
+          "Strategy",
+          "Startups"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal"
+        ],
+        "topicAngle": "Read posts from the public archive page for NLJR.",
+        "priority": "medium"
+      }
+    ],
+    "sourceHealth": {
+      "activeSources": 4,
+      "verifiedArchiveSources": 2,
+      "needsUrlConfirmation": 1,
+      "adhocItems": 1,
+      "keywordWatches": 0,
+      "skippedSources": [
+        {
+          "sourceId": "source-to-confirm",
+          "name": "Example source to confirm",
+          "reason": "URL/archive needs confirmation before automated scanning."
+        }
+      ]
+    }
+  },
+  "archive": [
+    {
+      "date": "2026-06-16",
+      "path": "content_pipeline/nljr_archive/2026-06-16.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-17T00:25:34.008265+00:00",
+      "summary": "Dr. Fei-Fei Li, Anthropic Engineering, a16z"
+    }
+  ]
+}

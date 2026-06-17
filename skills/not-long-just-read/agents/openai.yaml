@@ -1,0 +1,4 @@
+interface:
+  display_name: "Not Long; Just Read"
+  short_description: "Local daily reading brief from private files"
+  default_prompt: "Use $not-long-just-read to set up my local NLJR workspace and generate today's daily feed."
