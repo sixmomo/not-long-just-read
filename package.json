@@ -1,6 +1,6 @@
 {
   "name": "not-long-just-read",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Local-first Not Long; Just Read daily briefing kit with an agent skill and local Web UI.",
   "scripts": {

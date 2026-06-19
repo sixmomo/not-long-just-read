@@ -1,6 +1,7 @@
 const state = {
   feed: { today: { items: [], sourceHealth: {} }, archive: [] },
   registry: { sources: [] },
+  ledger: { articles: [] },
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -17,8 +18,11 @@ async function readJson(url, fallback) {
 }
 
 async function load() {
-  state.feed = await readJson("/api/nljr-feed", state.feed);
-  state.registry = await readJson("/api/source-registry", state.registry);
+  [state.feed, state.registry, state.ledger] = await Promise.all([
+    readJson("/api/nljr-feed", state.feed),
+    readJson("/api/source-registry", state.registry),
+    readJson("/api/nljr-article-ledger", state.ledger),
+  ]);
   render();
 }
 
@@ -27,28 +31,38 @@ function render() {
   renderToday();
   renderArchive();
   renderSources();
+  renderLedger();
 }
 
 function renderHealth() {
   const health = state.feed.today?.sourceHealth || {};
   const metrics = [
-    ["Active", health.activeSources ?? activeSources().length],
-    ["Verified", health.verifiedArchiveSources ?? verifiedArchiveSources().length],
+    ["Active sources", health.activeSources ?? activeSources().length],
+    ["Subscriptions", health.activeSubscriptions ?? activeSubscriptions().length],
+    ["Processed", health.processedArticles ?? processedArticles().length],
     ["Need URL", health.needsUrlConfirmation ?? needsUrlSources().length],
-    ["Adhoc", health.adhocItems ?? manualSources().length],
   ];
   $("#healthStrip").innerHTML = metrics
-    .map(([label, value]) => `<article class="metric"><p class="eyebrow">${escapeHtml(label)}</p><strong>${escapeHtml(String(value))}</strong></article>`)
+    .map(
+      ([label, value]) =>
+        `<article class="metric"><p class="eyebrow">${escapeHtml(label)}</p><strong>${escapeHtml(String(value))}</strong></article>`,
+    )
     .join("");
 }
 
 function renderToday() {
   const today = state.feed.today || {};
   const items = today.items || [];
-  $("#todayDate").textContent = today.date || "Not generated";
-  $("#todayItems").innerHTML = items.length
-    ? items.slice(0, 3).map(renderItem).join("")
-    : `<div class="empty">No NLJR feed has been generated yet.</div>`;
+  $("#todayDate").textContent = today.date || "Pending";
+  if (items.length) {
+    $("#todayItems").innerHTML = items.slice(0, 3).map(renderItem).join("");
+    return;
+  }
+  const message =
+    today.status === "no_new_posts"
+      ? "Today's scan completed. No new qualifying posts were found."
+      : "Today's live source scan is pending.";
+  $("#todayItems").innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
 }
 
 function renderItem(item) {
@@ -56,23 +70,32 @@ function renderItem(item) {
     <article class="item-card">
       <div>
         <p class="eyebrow">${escapeHtml(item.sourceName || "Source")}</p>
-        <h3>${escapeHtml(item.title || "Untitled signal")}</h3>
+        <h3>${escapeHtml(item.title || "Untitled article")}</h3>
       </div>
-      <p>${escapeHtml(item.summary || "")}</p>
+      <div>
+        <strong>Summary</strong>
+        <p>${escapeHtml(item.summary || "")}</p>
+      </div>
       <div>
         <strong>Why it matters</strong>
         <p>${escapeHtml(item.whyItMatters || "")}</p>
       </div>
+      <div>
+        <strong>Topic angle</strong>
+        <p>${escapeHtml(item.topicAngle || "")}</p>
+      </div>
       <div class="card-meta">
         ${(item.relevance || []).map((label) => `<span class="pill">${escapeHtml(label)}</span>`).join("")}
       </div>
-      ${item.url ? `<a class="source-link" href="${escapeAttr(item.url)}" target="_blank" rel="noreferrer">Open source</a>` : ""}
+      ${item.url ? `<a class="source-link" href="${escapeAttr(item.url)}" target="_blank" rel="noreferrer">Open article</a>` : ""}
     </article>
   `;
 }
 
 function renderArchive() {
-  const entries = [...(state.feed.archive || [])].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
+  const entries = [...(state.feed.archive || [])]
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .slice(0, 8);
   $("#archiveList").innerHTML = entries.length
     ? entries
         .map(
@@ -94,36 +117,70 @@ function renderSources() {
   const sources = state.registry.sources || [];
   $("#sourceList").innerHTML = sources.length
     ? sources
-        .slice(0, 10)
+        .filter((source) => source.sourceMode === "subscription")
         .map(
           (source) => `
             <article class="source-row">
               <div>
                 <strong>${escapeHtml(source.name || "Unnamed source")}</strong>
-                <p>${escapeHtml(source.notes || source.archiveUrl || source.url || "")}</p>
+                <p>${escapeHtml(source.feedUrl || source.archiveUrl || source.url || "URL not confirmed")}</p>
+                <small>Last checked: ${escapeHtml(source.lastCheckedAt || "Never")}</small>
               </div>
-              <span class="pill ${String(source.sourceConfidence || "").includes("needs") ? "warning" : ""}">${escapeHtml(source.sourceConfidence || "unknown")}</span>
+              <div class="status-stack">
+                <span class="pill">${escapeHtml(source.status || "active")}</span>
+                <span class="pill ${source.scanStatus === "error" ? "warning" : ""}">${escapeHtml(source.scanStatus || "never_checked")}</span>
+              </div>
             </article>
           `,
         )
         .join("")
-    : `<div class="empty">No sources yet.</div>`;
+    : `<div class="empty">No subscriptions yet.</div>`;
+}
+
+function renderLedger() {
+  const articles = [...(state.ledger.articles || [])].sort((a, b) =>
+    String(b.processedAt || b.discoveredAt || "").localeCompare(
+      String(a.processedAt || a.discoveredAt || ""),
+    ),
+  );
+  $("#ledgerList").innerHTML = articles.length
+    ? articles
+        .slice(0, 12)
+        .map(
+          (article) => `
+            <article class="ledger-row">
+              <div>
+                <p class="eyebrow">${escapeHtml(article.sourceName || article.sourceId || "Source")}</p>
+                <strong>${escapeHtml(article.title || "Untitled article")}</strong>
+                <p>${escapeHtml(article.url || "")}</p>
+              </div>
+              <div class="status-stack">
+                <span class="pill">${escapeHtml(article.status || "unknown")}</span>
+                <small>${escapeHtml(article.includedIn || article.publishedAt || "")}</small>
+              </div>
+            </article>
+          `,
+        )
+        .join("")
+    : `<div class="empty">No articles have been discovered yet.</div>`;
 }
 
 function activeSources() {
-  return (state.registry.sources || []).filter((source) => source.status !== "archived");
+  return (state.registry.sources || []).filter((source) => source.status === "active");
 }
 
-function verifiedArchiveSources() {
-  return activeSources().filter((source) => source.sourceConfidence === "verified_archive" && source.archiveUrl);
+function activeSubscriptions() {
+  return activeSources().filter((source) => source.sourceMode === "subscription");
 }
 
 function needsUrlSources() {
-  return activeSources().filter((source) => String(source.sourceConfidence || "").includes("needs"));
+  return activeSources().filter((source) =>
+    String(source.sourceConfidence || "").includes("needs"),
+  );
 }
 
-function manualSources() {
-  return activeSources().filter((source) => source.sourceMode === "manual_inbox");
+function processedArticles() {
+  return (state.ledger.articles || []).filter((article) => article.status === "processed");
 }
 
 function escapeHtml(value) {
@@ -138,23 +195,5 @@ function escapeHtml(value) {
 function escapeAttr(value) {
   return escapeHtml(value).replaceAll("`", "&#096;");
 }
-
-$("#generateButton").addEventListener("click", async () => {
-  const button = $("#generateButton");
-  button.disabled = true;
-  button.textContent = "Generating";
-  try {
-    const response = await fetch("/api/nljr-feed/generate", { method: "POST" });
-    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-    const result = await response.json();
-    state.feed = result.data || state.feed;
-    render();
-  } catch (error) {
-    alert(`Could not generate NLJR: ${error.message}`);
-  } finally {
-    button.disabled = false;
-    button.textContent = "Generate Today";
-  }
-});
 
 load();

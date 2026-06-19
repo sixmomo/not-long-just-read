@@ -20,7 +20,6 @@ body {
   font-family: Georgia, "Times New Roman", serif;
 }
 
-button,
 input,
 select {
   font: inherit;
@@ -65,19 +64,12 @@ h3 {
   text-transform: uppercase;
 }
 
-button {
-  min-height: 42px;
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  background: var(--accent);
-  color: white;
-  cursor: pointer;
-  padding: 0 16px;
-}
-
-button:disabled {
-  cursor: wait;
-  opacity: 0.65;
+.topbar-status,
+.section-note,
+small {
+  color: var(--muted);
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 13px;
 }
 
 main {
@@ -95,7 +87,8 @@ main {
 .metric,
 .item-card,
 .archive-row,
-.source-row {
+.source-row,
+.ledger-row {
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--panel);
@@ -169,17 +162,26 @@ main {
 }
 
 .archive-list,
-.source-list {
+.source-list,
+.ledger-list {
   display: grid;
   gap: 10px;
 }
 
 .archive-row,
-.source-row {
+.source-row,
+.ledger-row {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   padding: 14px;
+}
+
+.status-stack {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .warning {
@@ -197,7 +199,8 @@ main {
   .topbar,
   .section-header,
   .archive-row,
-  .source-row {
+  .source-row,
+  .ledger-row {
     align-items: start;
     flex-direction: column;
   }
@@ -206,5 +209,9 @@ main {
   .item-grid,
   .two-column {
     grid-template-columns: 1fr;
+  }
+
+  .status-stack {
+    align-items: flex-start;
   }
 }

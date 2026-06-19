@@ -13,6 +13,7 @@ The intended user flow is simple:
 NLJR stores these files in your local workspace:
 
 - `data/source-registry.json`: sources, URLs, tags, notes, priority, and source health.
+- `data/nljr-article-ledger.json`: discovered direct articles and their processing status.
 - `data/nljr-feed.json`: today's generated feed for the UI.
 - `content_pipeline/nljr_archive/YYYY-MM-DD.md`: daily Markdown archive.
 - `ui/`: local Web UI files.
@@ -37,7 +38,7 @@ Useful follow-up prompts:
 
 ```text
 Use $not-long-just-read to add this source to my registry: https://example.com/archive
-Use $not-long-just-read to generate today's NLJR feed.
+Use $not-long-just-read to scan my subscriptions and generate today's NLJR feed.
 Use $not-long-just-read to validate my NLJR files.
 Use $not-long-just-read to open the local UI.
 ```
@@ -58,15 +59,28 @@ The local UI runs at:
 http://127.0.0.1:8765
 ```
 
-## Source Health
+## How Daily NLJR Works
 
-Sources with `sourceConfidence` set to `needs_url_confirmation` are kept in the registry but skipped during automatic generation. This lets users save an idea first and confirm the source URL later.
+1. Your agent reads active subscriptions.
+2. It checks RSS feeds first and uses archive pages only to discover direct article links.
+3. It compares every direct article URL with the local article ledger.
+4. It adds genuinely new articles as `new`.
+5. The generator selects up to three articles and marks them `processed`.
+6. Processed URLs never appear again.
+
+Subscriptions have two separate states:
+
+- `status`: your control, using `active`, `paused`, or `archived`.
+- `scanStatus`: system health, using `never_checked`, `healthy`, `no_new_posts`, or `error`.
+
+Articles use `new`, `processed`, `skipped`, or `failed`. A source page or archive page is never itself an NLJR article.
 
 ## Repository Layout
 
 ```text
 data/
   source-registry.json
+  nljr-article-ledger.json
   nljr-feed.json
 content_pipeline/
   nljr_archive/

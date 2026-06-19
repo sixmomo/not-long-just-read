@@ -2,7 +2,7 @@
   "meta": {
     "name": "NLJR Source Registry",
     "description": "Local source list for Not Long; Just Read daily feed signals.",
-    "updatedAt": "2026-06-16"
+    "updatedAt": "2026-06-18"
   },
   "sources": [
     {
@@ -10,7 +10,7 @@
       "name": "From Words to Worlds: Spatial Intelligence is AI's Next Frontier",
       "sourceMode": "manual_inbox",
       "type": "article",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
       "relevance": ["Strategy", "AI", "Product"],
       "tags": ["spatial-intelligence", "world-models", "ai-frontier"],
@@ -20,7 +20,9 @@
       "sourceConfidence": "verified_post",
       "capturedAt": "2026-06-16",
       "publishedAt": "2025-11-10",
-      "sourceName": "Dr. Fei-Fei Li"
+      "sourceName": "Dr. Fei-Fei Li",
+      "processingStatus": "processed",
+      "processedAt": "2026-06-16"
     },
     {
       "id": "subscription-anthropic-engineering",
@@ -33,8 +35,13 @@
       "tags": ["ai", "engineering", "frontier-models"],
       "notes": "Read posts from Anthropic's public engineering page for NLJR.",
       "url": "https://www.anthropic.com/engineering",
+      "feedUrl": "",
       "archiveUrl": "https://www.anthropic.com/engineering",
-      "sourceConfidence": "verified_archive"
+      "sourceConfidence": "verified_archive",
+      "scanStatus": "never_checked",
+      "lastCheckedAt": "",
+      "lastItemSeen": "",
+      "lastError": ""
     },
     {
       "id": "subscription-a16z",
@@ -47,8 +54,13 @@
       "tags": ["venture", "ai", "startups"],
       "notes": "Read posts from the public archive page for NLJR.",
       "url": "https://www.a16z.news/",
+      "feedUrl": "https://www.a16z.news/feed",
       "archiveUrl": "https://www.a16z.news/archive",
-      "sourceConfidence": "verified_archive"
+      "sourceConfidence": "verified_archive",
+      "scanStatus": "never_checked",
+      "lastCheckedAt": "",
+      "lastItemSeen": "",
+      "lastError": ""
     },
     {
       "id": "source-to-confirm",
@@ -61,8 +73,13 @@
       "tags": ["example"],
       "notes": "This source is saved but will be skipped until a URL or archive URL is confirmed.",
       "url": "",
+      "feedUrl": "",
       "archiveUrl": "",
-      "sourceConfidence": "needs_url_confirmation"
+      "sourceConfidence": "needs_url_confirmation",
+      "scanStatus": "never_checked",
+      "lastCheckedAt": "",
+      "lastItemSeen": "",
+      "lastError": ""
     }
   ]
 }

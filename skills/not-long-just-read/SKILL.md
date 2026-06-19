@@ -19,7 +19,8 @@ Then perform the requested action. Do not ask the user to manually edit JSON unl
 
 Use these files in the NLJR workspace:
 
-- `data/source-registry.json`: source list, source status, priority, tags, notes, URLs, and source confidence.
+- `data/source-registry.json`: subscriptions, user-controlled status, scan health, URLs, and source confidence.
+- `data/nljr-article-ledger.json`: direct article records and their lifecycle state.
 - `data/nljr-feed.json`: current generated feed read by the UI.
 - `content_pipeline/nljr_archive/YYYY-MM-DD.md`: dated daily archive written after generation.
 - `ui/`: local-only Web UI that reads `data/nljr-feed.json` and `data/source-registry.json`.
@@ -41,22 +42,36 @@ Never store credentials in the registry. If a source requires a login or paid ac
 Use the script instead of editing JSON by hand when possible:
 
 ```bash
-python scripts/nljr.py add-source --name "Source Name" --url "https://example.com" --archive-url "https://example.com/archive" --priority high --tags "ai,product"
+python scripts/nljr.py add-source --name "Source Name" --url "https://example.com" --feed-url "https://example.com/feed" --archive-url "https://example.com/archive" --priority high --tags "ai,product"
 ```
 
 If the URL is unknown, add the source with `sourceConfidence` set to `needs_url_confirmation` and explain that it will be skipped by automated generation until confirmed.
 
-### Generate today's feed
+### Scan subscriptions and generate today's feed
 
-Run:
+1. Read active subscriptions from `data/source-registry.json`.
+2. Fetch actual posts published since the previous successful check. Prefer RSS or another structured feed. Use an archive page only to discover direct article URLs.
+3. Normalize each direct article URL and compare it with the complete article ledger.
+4. Ignore URLs already recorded in any lifecycle state. Never create duplicate ledger entries.
+5. Read and summarize genuinely new articles.
+6. Add each discovery through:
+
+```bash
+python scripts/nljr.py add-article --source-id "source-id" --source-name "Source Name" --title "Direct article title" --url "https://example.com/p/article" --published-at "YYYY-MM-DD" --summary "..." --why-it-matters "..." --topic-angle "..." --priority high
+```
+
+7. Record the source scan result:
+
+```bash
+python scripts/nljr.py record-scan --source-id "source-id" --status healthy --last-item-seen "https://example.com/p/article"
+```
+
+Use `no_new_posts` when a scan succeeds without discoveries. Use `error` with `--error` when it fails.
+
+8. Generate and validate:
 
 ```bash
 python scripts/nljr.py generate
-```
-
-Then validate:
-
-```bash
 python scripts/nljr.py validate
 ```
 
@@ -74,10 +89,13 @@ Then give the user the local URL printed by the command. The UI is local and rea
 
 ## Generation Rules
 
-- Include up to 3 items.
-- Prefer active manual inbox items with URLs, then active verified archive sources, then active keyword watches.
-- Skip archived sources.
-- Skip sources with `sourceConfidence` containing `needs` from automated generation, and include them in source health.
+- Include up to 3 direct articles from the ledger with status `new`.
+- Select higher-priority articles first, then newer articles.
+- Mark selected articles `processed` with `processedAt` and `includedIn`.
+- Never select an article whose direct URL already exists in the ledger.
+- Never turn a subscription homepage, RSS URL, or archive page into a feed item.
+- Keep source `status` separate from system-owned `scanStatus`.
+- Write `no_new_posts` with an empty item list when a completed scan finds nothing.
 - Always write both `data/nljr-feed.json` and `content_pipeline/nljr_archive/YYYY-MM-DD.md`.
 
 ## User-Facing Tone

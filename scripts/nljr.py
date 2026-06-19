@@ -5,15 +5,17 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import re
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 REGISTRY_PATH = DATA_DIR / "source-registry.json"
+LEDGER_PATH = DATA_DIR / "nljr-article-ledger.json"
 FEED_PATH = DATA_DIR / "nljr-feed.json"
 ARCHIVE_DIR = ROOT / "content_pipeline" / "nljr_archive"
 
@@ -38,38 +40,75 @@ def now_utc() -> str:
 
 
 def slugify(value: str) -> str:
-    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
-    return slug[:80] or "source"
+    slug = re.sub(r"[^a-z0-9]+", "-", str(value).lower()).strip("-")
+    return slug[:80] or "item"
 
 
-def source_url(source: dict) -> str:
-    return source.get("url") or source.get("archiveUrl") or source.get("homepageUrl") or ""
+def split_csv(value: str) -> list[str]:
+    return [part.strip() for part in (value or "").split(",") if part.strip()]
 
 
-def source_name(source: dict) -> str:
-    return source.get("sourceName") or source.get("publicationName") or source.get("name") or "Source"
+def normalize_url(value: str) -> str:
+    parsed = urlparse((value or "").strip())
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return ""
+    path = parsed.path.rstrip("/") or "/"
+    tracking_keys = {"fbclid", "gclid", "ref", "source"}
+    query = urlencode(
+        [
+            (key, item)
+            for key, item in parse_qsl(parsed.query, keep_blank_values=True)
+            if not key.lower().startswith("utm_") and key.lower() not in tracking_keys
+        ]
+    )
+    return parsed._replace(
+        netloc=parsed.netloc.lower(),
+        path=path,
+        query=query,
+        fragment="",
+    ).geturl()
 
 
-def item_from_source(source: dict, date: str, index: int) -> dict:
-    is_manual = source.get("sourceMode") == "manual_inbox"
-    title = source.get("name") if is_manual else "Archive scan ready"
-    url = source_url(source)
-    summary = source.get("notes") or "Source captured for today's NLJR review."
-    if not is_manual and source.get("archiveUrl"):
-        summary = f"Use the public archive source for today's scan: {source.get('archiveUrl')}"
+def read_ledger() -> dict:
+    return read_json(
+        LEDGER_PATH,
+        {
+            "meta": {
+                "name": "NLJR Article Ledger",
+                "description": "Tracks direct article URLs so processed items never appear again.",
+                "updatedAt": "",
+            },
+            "articles": [],
+        },
+    )
+
+
+def write_ledger(ledger: dict) -> None:
+    ledger.setdefault("meta", {})["updatedAt"] = today()
+    ledger["meta"].setdefault("name", "NLJR Article Ledger")
+    ledger["meta"].setdefault(
+        "description",
+        "Tracks direct article URLs so processed items never appear again.",
+    )
+    ledger.setdefault("articles", [])
+    write_json(LEDGER_PATH, ledger)
+
+
+def item_from_article(article: dict, source: dict, date: str, index: int) -> dict:
     return {
-        "id": f"{date}-{source.get('id') or slugify(source.get('name', 'source'))}-{index + 1}",
-        "sourceId": source.get("id"),
-        "sourceName": source_name(source),
-        "title": title,
-        "url": url,
-        "publishedAt": source.get("publishedAt", ""),
-        "summary": summary,
-        "whyItMatters": "This was explicitly added as a manual signal." if is_manual else "This verified source is ready for recurring NLJR scanning.",
-        "relevance": source.get("relevance", []),
-        "suggestedUse": ["Topic seed", "Strategy signal"],
-        "topicAngle": source.get("notes") or "Review this source for useful daily signals.",
-        "priority": source.get("priority") or "medium",
+        "id": f"{date}-{slugify(article.get('id') or article.get('title') or article.get('url'))}-{index + 1}",
+        "articleId": article.get("id"),
+        "sourceId": article.get("sourceId"),
+        "sourceName": article.get("sourceName") or source.get("name") or "Unknown source",
+        "title": article.get("title") or "Untitled article",
+        "url": article.get("url") or "",
+        "publishedAt": article.get("publishedAt") or "",
+        "summary": article.get("summary") or "",
+        "whyItMatters": article.get("whyItMatters") or "",
+        "relevance": article.get("relevance") or source.get("relevance") or [],
+        "suggestedUse": article.get("suggestedUse") or ["Topic seed", "Strategy signal"],
+        "topicAngle": article.get("topicAngle") or "",
+        "priority": article.get("priority") or source.get("priority") or "medium",
     }
 
 
@@ -84,11 +123,11 @@ def build_markdown(today_feed: dict) -> str:
     ]
     items = today_feed.get("items", [])
     if not items:
-        lines.extend(["No NLJR items generated.", ""])
+        lines.extend(["No new qualifying posts were found.", ""])
     for index, item in enumerate(items, start=1):
         lines.extend(
             [
-                f"### {index}. {item.get('title', 'Untitled signal')}",
+                f"### {index}. {item.get('title', 'Untitled article')}",
                 "",
                 f"Source: {item.get('sourceName', 'Source')}",
                 f"URL: {item.get('url', '')}",
@@ -117,57 +156,107 @@ def build_markdown(today_feed: dict) -> str:
             "## Source Health",
             "",
             f"- Active sources: {health.get('activeSources', 0)}",
-            f"- Verified archive sources: {health.get('verifiedArchiveSources', 0)}",
+            f"- Active subscriptions: {health.get('activeSubscriptions', 0)}",
             f"- Need URL confirmation: {health.get('needsUrlConfirmation', 0)}",
-            f"- Adhoc items: {health.get('adhocItems', 0)}",
             f"- Keyword watches: {health.get('keywordWatches', 0)}",
+            f"- New articles available: {health.get('newArticlesAvailable', 0)}",
+            f"- Processed articles: {health.get('processedArticles', 0)}",
+            "",
+            "## Skipped Sources",
             "",
         ]
     )
     skipped = health.get("skippedSources", [])
-    if skipped:
-        lines.extend(["## Skipped Sources", ""])
-        for source in skipped:
-            lines.append(f"- {source.get('name', 'Source')}: {source.get('reason', '')}")
-        lines.append("")
+    lines.extend(
+        [f"- {source.get('name', 'Source')}: {source.get('reason', '')}" for source in skipped]
+        or ["- None"]
+    )
+    lines.append("")
     return "\n".join(lines)
 
 
 def generate() -> dict:
     registry = read_json(REGISTRY_PATH, {"meta": {}, "sources": []})
     existing_feed = read_json(FEED_PATH, {"archive": []})
+    ledger = read_ledger()
     date = today()
     generated_at = now_utc()
-    active_sources = [source for source in registry.get("sources", []) if source.get("status") != "archived"]
-    adhocs = [source for source in active_sources if source.get("sourceMode") == "manual_inbox" and source_url(source)]
-    verified_archives = [
+    active_sources = [
+        source for source in registry.get("sources", []) if source.get("status") == "active"
+    ]
+    subscriptions = [
+        source for source in active_sources if source.get("sourceMode") == "subscription"
+    ]
+    keyword_watches = [
+        source for source in active_sources if source.get("sourceMode") == "keyword_watch"
+    ]
+    needs_url = [
         source
         for source in active_sources
-        if source.get("sourceMode") == "subscription"
-        and source.get("sourceConfidence") == "verified_archive"
-        and source.get("archiveUrl")
+        if "needs" in str(source.get("sourceConfidence") or "")
     ]
-    keyword_watches = [source for source in active_sources if source.get("sourceMode") == "keyword_watch"]
-    needs_url = [source for source in active_sources if "needs" in str(source.get("sourceConfidence") or "")]
+    source_by_id = {source.get("id"): source for source in registry.get("sources", [])}
     priority_rank = {"high": 0, "medium": 1, "low": 2}
-    source_pool = sorted([*adhocs, *verified_archives, *keyword_watches], key=lambda source: priority_rank.get(source.get("priority"), 9))
-    items = [item_from_source(source, date, index) for index, source in enumerate(source_pool[:3])]
+    eligible_articles = [
+        article
+        for article in ledger.get("articles", [])
+        if article.get("status") == "new" and normalize_url(article.get("url", ""))
+    ]
+    eligible_articles.sort(
+        key=lambda article: str(
+            article.get("publishedAt") or article.get("discoveredAt") or ""
+        ),
+        reverse=True,
+    )
+    eligible_articles.sort(
+        key=lambda article: priority_rank.get(article.get("priority"), 9)
+    )
+    selected_articles = eligible_articles[:3]
+    items = [
+        item_from_article(
+            article,
+            source_by_id.get(article.get("sourceId"), {}),
+            date,
+            index,
+        )
+        for index, article in enumerate(selected_articles)
+    ]
+    selected_ids = {article.get("id") for article in selected_articles}
+    for article in ledger.get("articles", []):
+        if article.get("id") in selected_ids:
+            article["status"] = "processed"
+            article["processedAt"] = generated_at
+            article["includedIn"] = date
+    write_ledger(ledger)
     today_feed = {
         "date": date,
-        "status": "generated",
+        "status": "generated" if items else "no_new_posts",
         "generatedAt": generated_at,
         "items": items,
         "sourceHealth": {
             "activeSources": len(active_sources),
-            "verifiedArchiveSources": len(verified_archives),
+            "activeSubscriptions": len(subscriptions),
             "needsUrlConfirmation": len(needs_url),
-            "adhocItems": len(adhocs),
             "keywordWatches": len(keyword_watches),
+            "newArticlesAvailable": len(
+                [
+                    article
+                    for article in ledger.get("articles", [])
+                    if article.get("status") == "new"
+                ]
+            ),
+            "processedArticles": len(
+                [
+                    article
+                    for article in ledger.get("articles", [])
+                    if article.get("status") == "processed"
+                ]
+            ),
             "skippedSources": [
                 {
                     "sourceId": source.get("id"),
                     "name": source.get("name"),
-                    "reason": "URL/archive needs confirmation before automated scanning.",
+                    "reason": "URL/feed needs confirmation before automated scanning.",
                 }
                 for source in needs_url
             ],
@@ -181,9 +270,12 @@ def generate() -> dict:
         "path": str(archive_path.relative_to(ROOT)).replace("\\", "/"),
         "itemCount": len(items),
         "generatedAt": generated_at,
-        "summary": ", ".join(item.get("sourceName") or "" for item in items) or "No NLJR items generated.",
+        "summary": ", ".join(item.get("sourceName") or "" for item in items)
+        or "No new qualifying posts.",
     }
-    archive = [archive_entry] + [entry for entry in existing_feed.get("archive", []) if entry.get("date") != date]
+    archive = [archive_entry] + [
+        entry for entry in existing_feed.get("archive", []) if entry.get("date") != date
+    ]
     data = {"today": today_feed, "archive": archive}
     write_json(FEED_PATH, data)
     return {"ok": True, "data": data, "archivePath": archive_entry["path"]}
@@ -191,30 +283,49 @@ def generate() -> dict:
 
 def validate() -> dict:
     registry = read_json(REGISTRY_PATH, {"sources": []})
+    ledger = read_ledger()
     feed = read_json(FEED_PATH, {})
     today_feed = feed.get("today", {})
     items = today_feed.get("items", [])
-    archive_path = ""
-    archive_exists = False
-    if feed.get("archive"):
-        archive_path = feed["archive"][0].get("path", "")
-        archive_exists = bool(archive_path and (ROOT / archive_path).exists())
+    archive_path = feed.get("archive", [{}])[0].get("path", "") if feed.get("archive") else ""
+    archive_exists = bool(archive_path and (ROOT / archive_path).exists())
+    article_urls = [
+        normalize_url(article.get("url", "")) for article in ledger.get("articles", [])
+    ]
+    article_urls = [url for url in article_urls if url]
+    duplicate_urls = sorted({url for url in article_urls if article_urls.count(url) > 1})
+    archive_urls = {
+        normalize_url(source.get("archiveUrl", ""))
+        for source in registry.get("sources", [])
+        if source.get("archiveUrl")
+    }
+    placeholder_items = [
+        item.get("id")
+        for item in items
+        if item.get("title") == "Archive scan ready"
+        or normalize_url(item.get("url", "")) in archive_urls
+    ]
     result = {
-        "ok": True,
+        "ok": len(items) <= 3 and not duplicate_urls and not placeholder_items,
         "sourceCount": len(registry.get("sources", [])),
+        "articleCount": len(ledger.get("articles", [])),
         "todayDate": today_feed.get("date", ""),
+        "todayStatus": today_feed.get("status", ""),
         "itemCount": len(items),
         "itemLimitOk": len(items) <= 3,
+        "duplicateArticleUrls": duplicate_urls,
+        "placeholderItems": placeholder_items,
         "archivePath": archive_path,
         "archiveExists": archive_exists,
     }
-    if len(items) > 3:
-        result["ok"] = False
     return result
 
 
 def add_source(args: argparse.Namespace) -> dict:
-    registry = read_json(REGISTRY_PATH, {"meta": {"name": "NLJR Source Registry"}, "sources": []})
+    registry = read_json(
+        REGISTRY_PATH,
+        {"meta": {"name": "NLJR Source Registry"}, "sources": []},
+    )
     name = args.name.strip()
     source_id = args.id or f"source-{slugify(name)}"
     source = {
@@ -228,17 +339,88 @@ def add_source(args: argparse.Namespace) -> dict:
         "tags": split_csv(args.tags),
         "notes": args.notes or "Added locally by NLJR.",
         "url": args.url or "",
+        "feedUrl": args.feed_url or "",
         "archiveUrl": args.archive_url or "",
-        "sourceConfidence": args.confidence or ("verified_archive" if args.archive_url else "needs_url_confirmation"),
+        "sourceConfidence": args.confidence
+        or ("verified_archive" if args.feed_url or args.archive_url else "needs_url_confirmation"),
+        "scanStatus": "never_checked" if args.mode == "subscription" else "",
+        "lastCheckedAt": "",
+        "lastItemSeen": "",
+        "lastError": "",
     }
-    registry["sources"] = [source] + [existing for existing in registry.get("sources", []) if existing.get("id") != source_id]
+    registry["sources"] = [
+        source,
+        *[
+            existing
+            for existing in registry.get("sources", [])
+            if existing.get("id") != source_id
+        ],
+    ]
     registry.setdefault("meta", {})["updatedAt"] = today()
     write_json(REGISTRY_PATH, registry)
     return {"ok": True, "source": source}
 
 
-def split_csv(value: str) -> list[str]:
-    return [part.strip() for part in (value or "").split(",") if part.strip()]
+def add_article(args: argparse.Namespace) -> dict:
+    ledger = read_ledger()
+    url = normalize_url(args.url)
+    if not url:
+        return {"ok": False, "error": "A direct http(s) article URL is required."}
+    existing = next(
+        (
+            article
+            for article in ledger.get("articles", [])
+            if normalize_url(article.get("url", "")) == url
+        ),
+        None,
+    )
+    if existing:
+        return {"ok": True, "duplicate": True, "article": existing}
+    url_fingerprint = hashlib.sha1(url.encode("utf-8")).hexdigest()[:10]
+    article = {
+        "id": args.id or f"article-{slugify(args.title)}-{url_fingerprint}",
+        "sourceId": args.source_id,
+        "sourceName": args.source_name,
+        "title": args.title,
+        "url": url,
+        "publishedAt": args.published_at,
+        "discoveredAt": now_utc(),
+        "summary": args.summary,
+        "whyItMatters": args.why_it_matters,
+        "topicAngle": args.topic_angle,
+        "relevance": split_csv(args.relevance),
+        "suggestedUse": split_csv(args.suggested_use)
+        or ["Topic seed", "Strategy signal"],
+        "priority": args.priority,
+        "status": args.status,
+    }
+    ledger["articles"] = [article, *ledger.get("articles", [])]
+    write_ledger(ledger)
+    return {"ok": True, "duplicate": False, "article": article}
+
+
+def record_scan(args: argparse.Namespace) -> dict:
+    registry = read_json(
+        REGISTRY_PATH,
+        {"meta": {"name": "NLJR Source Registry"}, "sources": []},
+    )
+    source = next(
+        (
+            item
+            for item in registry.get("sources", [])
+            if item.get("id") == args.source_id
+        ),
+        None,
+    )
+    if not source:
+        return {"ok": False, "error": f"Source not found: {args.source_id}"}
+    source["scanStatus"] = args.status
+    source["lastCheckedAt"] = now_utc()
+    source["lastItemSeen"] = args.last_item_seen
+    source["lastError"] = args.error if args.status == "error" else ""
+    registry.setdefault("meta", {})["updatedAt"] = today()
+    write_json(REGISTRY_PATH, registry)
+    return {"ok": True, "source": source}
 
 
 class NLJRHandler(SimpleHTTPRequestHandler):
@@ -257,6 +439,8 @@ class NLJRHandler(SimpleHTTPRequestHandler):
             return self.send_json(read_json(REGISTRY_PATH, {"meta": {}, "sources": []}))
         if parsed.path == "/api/nljr-feed":
             return self.send_json(read_json(FEED_PATH, {"today": {}, "archive": []}))
+        if parsed.path == "/api/nljr-article-ledger":
+            return self.send_json(read_ledger())
         return super().do_GET()
 
     def do_POST(self) -> None:
@@ -286,12 +470,15 @@ def main() -> None:
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("generate")
     subparsers.add_parser("validate")
+
     serve_parser = subparsers.add_parser("serve")
     serve_parser.add_argument("--host", default="127.0.0.1")
     serve_parser.add_argument("--port", default=8765, type=int)
+
     add_parser = subparsers.add_parser("add-source")
     add_parser.add_argument("--name", required=True)
     add_parser.add_argument("--url", default="")
+    add_parser.add_argument("--feed-url", default="")
     add_parser.add_argument("--archive-url", default="")
     add_parser.add_argument("--priority", choices=["high", "medium", "low"], default="medium")
     add_parser.add_argument("--tags", default="")
@@ -301,6 +488,36 @@ def main() -> None:
     add_parser.add_argument("--type", default="newsletter")
     add_parser.add_argument("--confidence", default="")
     add_parser.add_argument("--id", default="")
+
+    article_parser = subparsers.add_parser("add-article")
+    article_parser.add_argument("--source-id", required=True)
+    article_parser.add_argument("--source-name", required=True)
+    article_parser.add_argument("--title", required=True)
+    article_parser.add_argument("--url", required=True)
+    article_parser.add_argument("--published-at", default="")
+    article_parser.add_argument("--summary", required=True)
+    article_parser.add_argument("--why-it-matters", required=True)
+    article_parser.add_argument("--topic-angle", required=True)
+    article_parser.add_argument("--relevance", default="Strategy")
+    article_parser.add_argument("--suggested-use", default="Topic seed,Strategy signal")
+    article_parser.add_argument("--priority", choices=["high", "medium", "low"], default="medium")
+    article_parser.add_argument(
+        "--status",
+        choices=["new", "processed", "skipped", "failed"],
+        default="new",
+    )
+    article_parser.add_argument("--id", default="")
+
+    scan_parser = subparsers.add_parser("record-scan")
+    scan_parser.add_argument("--source-id", required=True)
+    scan_parser.add_argument(
+        "--status",
+        choices=["never_checked", "healthy", "no_new_posts", "error"],
+        required=True,
+    )
+    scan_parser.add_argument("--last-item-seen", default="")
+    scan_parser.add_argument("--error", default="")
+
     args = parser.parse_args()
     if args.command == "generate":
         print(json.dumps(generate(), indent=2, ensure_ascii=False))
@@ -311,6 +528,16 @@ def main() -> None:
             raise SystemExit(1)
     elif args.command == "add-source":
         print(json.dumps(add_source(args), indent=2, ensure_ascii=False))
+    elif args.command == "add-article":
+        result = add_article(args)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result["ok"]:
+            raise SystemExit(1)
+    elif args.command == "record-scan":
+        result = record_scan(args)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result["ok"]:
+            raise SystemExit(1)
     elif args.command == "serve":
         serve(args)
 
