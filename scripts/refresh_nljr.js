@@ -5,10 +5,30 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const REGISTRY_PATH = path.join(ROOT, "data", "source-registry.json");
-const LEDGER_PATH = path.join(ROOT, "data", "nljr-article-ledger.json");
-const FEED_PATH = path.join(ROOT, "data", "nljr-feed.json");
-const ARCHIVE_DIR = path.join(ROOT, "content_pipeline", "nljr_archive");
+
+// Load dotenv values if file exists
+try {
+  const envContent = await fs.readFile(path.join(ROOT, ".env"), "utf8");
+  for (const line of envContent.split("\n")) {
+    const match = line.match(/^\s*([\w\.\-]+)\s*=\s*(.*)?\s*$/);
+    if (match) {
+      const key = match[1];
+      let value = (match[2] || "").trim();
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.substring(1, value.length - 1);
+      }
+      process.env[key] = value;
+    }
+  }
+} catch (e) {
+  // Ignore missing .env
+}
+
+const DATA_DIR = process.env.OPS_DATA_DIR || path.join(ROOT, "data");
+const REGISTRY_PATH = path.join(DATA_DIR, "source-registry.json");
+const LEDGER_PATH = path.join(DATA_DIR, "nljr-article-ledger.json");
+const FEED_PATH = path.join(DATA_DIR, "nljr-feed.json");
+const ARCHIVE_DIR = path.join(DATA_DIR, "content_pipeline", "nljr_archive");
 
 const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0 Safari/537.36";
 const DISCOVERY_WINDOW_HOURS = 48;
