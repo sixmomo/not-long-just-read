@@ -3,63 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Not Long; Just Read</title>
+    <title>NLJR Console</title>
     <link rel="stylesheet" href="/ui/styles.css" />
   </head>
   <body>
     <header class="topbar">
       <div>
         <p class="eyebrow">Local-first daily brief</p>
-        <h1>NLJR</h1>
+        <h1>NLJR Console</h1>
       </div>
-      <p class="topbar-status">Live discovery via your AI agent</p>
+      <p class="topbar-status">Live discovery via Node.js scraper</p>
     </header>
 
-    <main>
-      <section class="status-strip" id="healthStrip"></section>
-
-      <section class="band">
-        <div class="section-header">
-          <div>
-            <p class="eyebrow">Today</p>
-            <h2>Not Long; Just Read</h2>
-          </div>
-          <span class="date-pill" id="todayDate">Not generated</span>
-        </div>
-        <div class="item-grid" id="todayItems"></div>
-      </section>
-
-      <section class="band two-column">
-        <div>
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Archive</p>
-              <h2>Daily snapshots</h2>
-            </div>
-          </div>
-          <div class="archive-list" id="archiveList"></div>
-        </div>
-        <div>
-          <div class="section-header">
-            <div>
-              <p class="eyebrow">Sources</p>
-              <h2>Registry health</h2>
-            </div>
-          </div>
-          <div class="source-list" id="sourceList"></div>
-        </div>
-      </section>
-
-      <section class="band">
-        <div class="section-header">
-          <div>
-            <p class="eyebrow">Article ledger</p>
-            <h2>Processing history</h2>
-          </div>
-          <p class="section-note">Processed URLs are never selected again.</p>
-        </div>
-        <div class="ledger-list" id="ledgerList"></div>
-      </section>
+    <main id="app-view" style="padding: 24px; max-width: 1400px; margin: 0 auto;">
+      <div class="loading-state">
+        <h3>Loading NLJR Console...</h3>
+        <p>Connecting to backend API...</p>
+      </div>
     </main>
 
     <script src="/ui/app.js"></script>

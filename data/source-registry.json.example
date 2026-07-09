@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "name": "NLJR Source Registry",
+    "description": "Unified input list for Not Long; Just Read daily feed signals.",
+    "updatedAt": "2026-07-09"
+  },
+  "sources": [
+    {
+      "id": "subscription-anthropic-blog",
+      "name": "Anthropic News & Research",
+      "sourceMode": "subscription",
+      "type": "website",
+      "status": "active",
+      "scanStatus": "never_checked",
+      "lastError": "",
+      "priority": "high",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "AI Research",
+        "LLMs"
+      ],
+      "notes": "Anthropic announcements and model release posts.",
+      "url": "https://www.anthropic.com/news",
+      "feedUrl": "https://www.anthropic.com/index.xml",
+      "fetchMethod": "rss"
+    },
+    {
+      "id": "keyword-watch-ai-pms",
+      "name": "AI Product Managers Search",
+      "sourceMode": "keyword_watch",
+      "type": "keyword",
+      "status": "active",
+      "scanStatus": "",
+      "lastError": "",
+      "priority": "medium",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "Career",
+        "AI PM"
+      ],
+      "notes": "Daily keyword search across product communities.",
+      "keywords": [
+        "AI PM",
+        "AI Product Manager"
+      ],
+      "platforms": [
+        "Google"
+      ],
+      "language": [
+        "English"
+      ],
+      "lookbackHours": 24
+    }
+  ]
+}

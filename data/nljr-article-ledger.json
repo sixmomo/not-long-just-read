@@ -1,8 +1,0 @@
-{
-  "meta": {
-    "name": "NLJR Article Ledger",
-    "description": "Tracks direct article URLs so processed items never appear again.",
-    "updatedAt": "2026-06-18"
-  },
-  "articles": []
-}

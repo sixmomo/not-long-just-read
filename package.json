@@ -1,11 +1,12 @@
 {
   "name": "not-long-just-read",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Local-first Not Long; Just Read daily briefing kit with an agent skill and local Web UI.",
+  "description": "Local-first daily reading and signal system with an agent skill and Web UI console.",
+  "type": "module",
   "scripts": {
-    "validate": "python scripts/nljr.py validate",
-    "generate": "python scripts/nljr.py generate",
-    "dev": "python scripts/nljr.py serve"
+    "start": "node server.mjs",
+    "refresh": "node scripts/refresh_nljr.js",
+    "test": "node scripts/test_nljr.js"
   }
 }

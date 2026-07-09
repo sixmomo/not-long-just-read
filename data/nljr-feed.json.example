@@ -1,0 +1,53 @@
+{
+  "today": {
+    "date": "2026-07-09",
+    "status": "generated",
+    "generatedAt": "2026-07-09T10:05:00.000Z",
+    "items": [
+      {
+        "id": "2026-07-09-introducing-claude-3-5-sonnet-1",
+        "articleId": "article-sample-post-12345",
+        "sourceId": "subscription-anthropic-blog",
+        "sourceName": "Anthropic News & Research",
+        "title": "Introducing Claude 3.5 Sonnet",
+        "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+        "publishedAt": "2026-06-20",
+        "summary": "This is a sample summary of the Claude 3.5 Sonnet release. It explains the capabilities, benchmark improvements, and speed optimizations.",
+        "whyItMatters": "This release sets a new industry standard for intelligence and speed, making AI PM workflows more efficient.",
+        "conciseSummary": "Claude 3.5 Sonnet sets new benchmarks for intelligence and speed.",
+        "conciseWhyRelevant": "This is a high-intent signal for AI PM workflow strategy.",
+        "relevance": [
+          "Strategy"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal"
+        ],
+        "topicAngle": "Analyzing the enterprise impact of Claude 3.5 Sonnet relative to pricing.",
+        "priority": "high",
+        "detailLevel": "recommended"
+      }
+    ],
+    "recommendedItemIds": [
+      "article-sample-post-12345"
+    ],
+    "sourceHealth": {
+      "activeSources": 2,
+      "activeSubscriptions": 1,
+      "needsUrlConfirmation": 0,
+      "keywordWatches": 1,
+      "newArticlesAvailable": 0,
+      "processedArticles": 1,
+      "skippedSources": []
+    }
+  },
+  "archive": [
+    {
+      "date": "2026-07-09",
+      "path": "content_pipeline/nljr_archive/2026-07-09.md",
+      "itemCount": 1,
+      "generatedAt": "2026-07-09T10:05:00.000Z",
+      "summary": "Anthropic News & Research"
+    }
+  ]
+}
