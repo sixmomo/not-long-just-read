@@ -1,5 +1,5 @@
 const state = {
-  route: "nljr-day",
+  route: "daily",
   postPageId: "",
   actionMessage: "",
   loading: true,
@@ -319,7 +319,7 @@ async function loadNLJRArchiveEdition(date) {
     state.nljrArchiveLoading[date] = false;
   }
 
-  if (state.route === "nljr-day" && state.postPageId === date) {
+  if (state.route === "daily" && state.postPageId === date) {
     render();
   }
 }
@@ -339,7 +339,7 @@ async function loadRealData() {
   } finally {
     state.loading = false;
     render();
-    if (state.route === "nljr-day" && state.postPageId) {
+    if (state.route === "daily" && state.postPageId) {
       void loadNLJRArchiveEdition(state.postPageId);
     }
   }
@@ -423,34 +423,34 @@ function selectOptions(options, selected) {
 
 function pageTitle(route) {
   const titles = {
-    "nljr-day": "Today's NLJR",
-    nljr: "NLJR Console",
-    "daily-archives": "NLJR Archives",
+    daily: "Today's NLJR",
+    console: "NLJR Console",
+    archives: "NLJR Archives",
   };
   return titles[route] || "NLJR";
 }
 
 function parseRouteHash(hashValue) {
   const raw = String(hashValue || "").replace(/^#/, "");
-  if (!raw) return { route: "nljr-day", postId: "" };
-  if (raw.startsWith("nljr-day/")) {
+  if (!raw) return { route: "daily", postId: "" };
+  if (raw.startsWith("daily/")) {
     const parts = raw.split("/");
-    return { route: "nljr-day", postId: parts[1] || "" };
+    return { route: "daily", postId: parts[1] || "" };
   }
-  if (raw === "nljr") return { route: "nljr", postId: "" };
-  if (raw === "daily-archives") return { route: "daily-archives", postId: "" };
-  return { route: "nljr-day", postId: "" };
+  if (raw === "console") return { route: "console", postId: "" };
+  if (raw === "archives") return { route: "archives", postId: "" };
+  return { route: "daily", postId: "" };
 }
 
 function setRoute(nextRoute, options = {}) {
-  const safeRoutes = ["nljr-day", "nljr", "daily-archives"];
-  const safeRoute = safeRoutes.includes(nextRoute) ? nextRoute : "nljr-day";
+  const safeRoutes = ["daily", "console", "archives"];
+  const safeRoute = safeRoutes.includes(nextRoute) ? nextRoute : "daily";
   state.route = safeRoute;
   state.postPageId = options.postId || "";
 
   let expectedHash = `#${safeRoute}`;
-  if (safeRoute === "nljr-day" && state.postPageId) {
-    expectedHash = `#nljr-day/${state.postPageId}`;
+  if (safeRoute === "daily" && state.postPageId) {
+    expectedHash = `#daily/${state.postPageId}`;
   }
 
   if (window.location.hash !== expectedHash) {
@@ -462,14 +462,14 @@ function setRoute(nextRoute, options = {}) {
   }
 
   document.querySelectorAll(".nav-item").forEach((item) => {
-    const route = item.getAttribute("href")?.replace(/^#/, "").split("/")[0] || "nljr-day";
+    const route = item.getAttribute("href")?.replace(/^#/, "").split("/")[0] || "daily";
     item.classList.toggle("active", route === state.route);
   });
 
   document.querySelector("#page-title").textContent = pageTitle(state.route);
   render();
 
-  if (state.route === "nljr-day" && state.postPageId) {
+  if (state.route === "daily" && state.postPageId) {
     void loadNLJRArchiveEdition(state.postPageId);
   }
 }
@@ -776,7 +776,7 @@ function nljrArchiveSummaryView({ limit = 5 } = {}) {
           <h3>NLJR Archive</h3>
           <p>Daily feed snapshots saved for later review.</p>
         </div>
-        <a class="ghost-button compact-action" href="#daily-archives" data-route="daily-archives">View All</a>
+        <a class="ghost-button compact-action" href="#archives" data-route="archives">View All</a>
       </div>
       ${
         entries.length
@@ -796,7 +796,7 @@ function nljrArchiveEntryView(entry) {
       </div>
       <div class="card-meta">
         <span class="pill">${escapeHtml(String(entry.itemCount || 0))} items</span>
-        <a class="ghost-button compact-action" href="#nljr-day/${escapeHtml(entry.date || "")}" data-route="nljr-day" data-post-id="${escapeHtml(entry.date || "")}">Read NLJR</a>
+        <a class="ghost-button compact-action" href="#daily/${escapeHtml(entry.date || "")}" data-route="daily" data-post-id="${escapeHtml(entry.date || "")}">Read NLJR</a>
       </div>
     </article>
   `;
@@ -814,7 +814,7 @@ function dailyArchivesView() {
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
           <span class="pill">${entries.length} entries</span>
-          <a class="ghost-button compact-action" href="#nljr-day" data-route="nljr-day">Today's NLJR</a>
+          <a class="ghost-button compact-action" href="#daily" data-route="daily">Today's NLJR</a>
         </div>
       </div>
       ${
@@ -943,7 +943,7 @@ function nljrDayView() {
           </div>
           <div class="panel-action-stack">
             ${archiveEntry ? `<span class="pill">${escapeHtml(String(archiveEntry.itemCount || 0))} signals</span>` : ""}
-            <a class="ghost-button compact-action" href="#daily-archives" data-route="daily-archives">Back to Archives</a>
+            <a class="ghost-button compact-action" href="#archives" data-route="archives">Back to Archives</a>
           </div>
         </div>
       </section>
@@ -1109,12 +1109,12 @@ function render() {
     return;
   }
 
-  if (state.route === "nljr-day") {
+  if (state.route === "daily") {
     view.innerHTML = nljrDayView();
-  } else if (state.route === "nljr") {
+  } else if (state.route === "console") {
     view.innerHTML = sourceManagementView();
     bindSourceManagementEvents();
-  } else if (state.route === "daily-archives") {
+  } else if (state.route === "archives") {
     view.innerHTML = dailyArchivesView();
   }
 
