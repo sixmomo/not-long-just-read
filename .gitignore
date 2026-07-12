@@ -30,8 +30,6 @@ archive/
 performance/
 trend_inbox/
 content_pipeline/
-!content_pipeline/nljr_archive/
-!content_pipeline/nljr_archive/**
 strategy/
 00 Home.md
 references/
@@ -47,3 +45,17 @@ _tmp_*/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local Obsidian config
+.obsidian/
+
+# Local handoffs and docs
+handoff/
+docs/
+
+# Local build zip
+nljr-local-first-kit.zip
+
+# Private metadata
+VISION.md
+CLAUDE.md
