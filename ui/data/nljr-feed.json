@@ -1,0 +1,445 @@
+{
+  "today": {
+    "date": "2026-07-12",
+    "status": "generated",
+    "generatedAt": "2026-07-12T16:58:00.256Z",
+    "items": [
+      {
+        "id": "2026-07-12-article-how-tech-workers-actually-feel-about-ai-in-2026-annual-ai-sentiment-surv-1",
+        "articleId": "article-how-tech-workers-actually-feel-about-ai-in-2026-annual-ai-sentiment-survey-noam--3453698be7",
+        "sourceId": "subscription-lennys-newsletter",
+        "sourceName": "Lenny's Newsletter",
+        "title": "How tech workers actually feel about AI in 2026 | Annual AI sentiment survey (Noam Segal)",
+        "url": "https://www.lennysnewsletter.com/p/how-tech-workers-actually-feel-about",
+        "publishedAt": "2026-07-12",
+        "summary": "Why AI has split the tech workforce almost exactly in half—one half that’s thriving, another that’s shaken The four emotional archetypes defining tech workers right now (the Energized, the Conflicted, the Disoriented, and the Resentful) Why nobody in tech would recommend their job to someone entering the industry today • How tech workers are feeling in 2026: a workforce splitting in two: https://www.lennysnewsletter.com/p/how-tech-workers-are-feeling-in-2026",
+        "whyItMatters": "Lenny's Newsletter is a tracked source for product, growth, career. Why AI has split the tech workforce almost exactly in half—one half that’s thriving, another that’s shaken The four emotional archetypes defining tech workers right now (the Energized, the Conflicted, the Disoriented, an... This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Why AI has split the tech workforce almost exactly in half—one half that’s thriving, another that’s shaken The four emotional archetypes defining tech workers right now (the Energized, the Conflicted, the Disoriented, and the Resentful) Why nobody in tech would recommend their jo...",
+        "conciseWhyRelevant": "How tech workers actually feel about AI in 2026 | Annual AI sentiment survey (Noam Segal) is a fresh product, growth signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "How tech workers actually feel about AI in 2026 | Annual AI sentiment survey (Noam Segal) is a current product, growth, career signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "recommended"
+      },
+      {
+        "id": "2026-07-12-article-the-pragmatic-engineer-ama-b73c8f8250-2",
+        "articleId": "article-the-pragmatic-engineer-ama-b73c8f8250",
+        "sourceId": "subscription-the-pragmatic-engineer",
+        "sourceName": "The Pragmatic Engineer",
+        "title": "The Pragmatic Engineer AMA - by Gergely Orosz",
+        "url": "https://newsletter.pragmaticengineer.com/p/the-pragmatic-engineer-ama",
+        "publishedAt": "2026-07-08",
+        "summary": "Verify your system’s correctness by running your whole system in a hostile simulation and finding bugs. I’ve been using Antithesis myself, and I’m impressed with their innovation in building new kinds of debugging tools. Like this: Bug probability analysis in Antithesis’ fully deterministic, simulated environment.",
+        "whyItMatters": "The Pragmatic Engineer is a tracked source for engineering, ai, tech-market. Verify your system’s correctness by running your whole system in a hostile simulation and finding bugs. This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Verify your system’s correctness by running your whole system in a hostile simulation and finding bugs. I’ve been using Antithesis myself, and I’m impressed with their innovation in building new kinds of debugging tools.",
+        "conciseWhyRelevant": "The Pragmatic Engineer AMA - by Gergely Orosz is a fresh engineering, ai signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "The Pragmatic Engineer AMA - by Gergely Orosz is a current engineering, ai, tech-market signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "recommended"
+      },
+      {
+        "id": "2026-07-12-article-what-a-harness-is-and-how-to-build-one-with-claude-agent-sdk-6a4bfe5008-3",
+        "articleId": "article-what-a-harness-is-and-how-to-build-one-with-claude-agent-sdk-6a4bfe5008",
+        "sourceId": "subscription-lennys-newsletter",
+        "sourceName": "Lenny's Newsletter",
+        "title": "What is a harness and how to build one with Claude Agent SDK",
+        "url": "https://www.lennysnewsletter.com/p/what-a-harness-is-and-how-to-build",
+        "publishedAt": "2026-07-08",
+        "summary": "When to build a harness versus when to stick with a general-purpose tool like Claude Code or Codex How I used GPT-5.5 and Claude Opus to build the harness code itself (and where they both initially resisted) How to structure the artifacts your harness produces so the whole team can use the output • Claude Agent SDK (Anthropic): https://code.claude.com/docs/en/agent-sdk/overview",
+        "whyItMatters": "Lenny's Newsletter is a tracked source for product, growth, career. When to build a harness versus when to stick with a general-purpose tool like Claude Code or Codex How I used GPT-5.5 and Claude Opus to build the harness code itself (and where they both initially resisted) How to struc... This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "When to build a harness versus when to stick with a general-purpose tool like Claude Code or Codex How I used GPT-5.5 and Claude Opus to build the harness code itself (and where they both initially resisted) How to structure the artifacts your harness produces so the whole team c...",
+        "conciseWhyRelevant": "What is a harness and how to build one with Claude Agent SDK is a fresh product, growth signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "What is a harness and how to build one with Claude Agent SDK is a current product, growth, career signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "recommended"
+      },
+      {
+        "id": "2026-07-12-article-tech-jobs-market-in-2026-part-3-hiring-managers-job-seekers-b3dd400e1f-4",
+        "articleId": "article-tech-jobs-market-in-2026-part-3-hiring-managers-job-seekers-b3dd400e1f",
+        "sourceId": "subscription-the-pragmatic-engineer",
+        "sourceName": "The Pragmatic Engineer",
+        "title": "Tech jobs market in 2026, part 3: hiring managers & job seekers",
+        "url": "https://newsletter.pragmaticengineer.com/p/tech-jobs-market-in-2026-part-3-hiring",
+        "publishedAt": "2026-07-07",
+        "summary": "For this final part of our series on the tech hiring market during the first half of 2026, I spoke with more than 50 hiring managers, software engineers, and engineering leaders. Thank you to everyone who contributed! For more on this topic, check out our analysis of what the data says about the market in Part 1 and Part 2 of this mini-series. Overall, an appropriate description of the employment market as many folks experience it right now would be “weird”.",
+        "whyItMatters": "The Pragmatic Engineer is a tracked source for engineering, ai, tech-market. For this final part of our series on the tech hiring market during the first half of 2026, I spoke with more than 50 hiring managers, software engineers, and engineering leaders. This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "For this final part of our series on the tech hiring market during the first half of 2026, I spoke with more than 50 hiring managers, software engineers, and engineering leaders. Thank you to everyone who contributed!",
+        "conciseWhyRelevant": "Tech jobs market in 2026, part 3: hiring managers & job seekers is a fresh engineering, ai signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "Tech jobs market in 2026, part 3: hiring managers & job seekers is a current engineering, ai, tech-market signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "brief"
+      },
+      {
+        "id": "2026-07-12-article-https-www-anthropic-com-engineering-claude-code-sandboxing-5a3989c21b-5",
+        "articleId": "article-https-www-anthropic-com-engineering-claude-code-sandboxing-5a3989c21b",
+        "sourceId": "subscription-anthropic-engineering",
+        "sourceName": "Anthropic Engineering",
+        "title": "Making Claude Code more secure and autonomous with sandboxing \\ Anthropic",
+        "url": "https://www.anthropic.com/engineering/claude-code-sandboxing",
+        "publishedAt": "2026-07-07",
+        "summary": "Learn how Claude Code&#x27;s new sandboxing feature protects developers with filesystem and network isolation, reducing permission prompts and increasing user safety. ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicBeyond permission prompts: making Claude Code more secure and autonomousPublished Oct 20, 2025 Claude Code&#x27;s new sandboxing features, a bash tool and Claude Code on the web, reduce permission prompts and increase user safety by enabling two boundaries: filesystem and network isolation. In Claude Code, Claude writes, tests, and debugs code alongside you, navigating your codebase, editing multiple files, and running commands to verify its work.",
+        "whyItMatters": "Anthropic Engineering is a tracked source for ai, engineering, frontier-models. Learn how Claude Code&#x27;s new sandboxing feature protects developers with filesystem and network isolation, reducing permission prompts and increasing user safety. This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Learn how Claude Code&#x27;s new sandboxing feature protects developers with filesystem and network isolation, reducing permission prompts and increasing user safety.",
+        "conciseWhyRelevant": "Making Claude Code more secure and autonomous with sandboxing \\ Anthropic is a fresh ai, engineering signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "Making Claude Code more secure and autonomous with sandboxing \\ Anthropic is a current ai, engineering, frontier-models signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "brief"
+      },
+      {
+        "id": "2026-07-12-article-https-www-anthropic-com-engineering-code-execution-with-mcp-4dd2373a00-6",
+        "articleId": "article-https-www-anthropic-com-engineering-code-execution-with-mcp-4dd2373a00",
+        "sourceId": "subscription-anthropic-engineering",
+        "sourceName": "Anthropic Engineering",
+        "title": "Code execution with MCP: building more efficient AI agents \\ Anthropic",
+        "url": "https://www.anthropic.com/engineering/code-execution-with-mcp",
+        "publishedAt": "2026-07-07",
+        "summary": "Learn how code execution with the Model Context Protocol enables agents to handle more tools while using fewer tokens, reducing context overhead by up to 98.7%. ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicCode execution with MCP: Building more efficient agentsPublished Nov 04, 2025 Direct tool calls consume context for each definition and result. Agents scale better by writing code to call tools instead.",
+        "whyItMatters": "Anthropic Engineering is a tracked source for ai, engineering, frontier-models. Learn how code execution with the Model Context Protocol enables agents to handle more tools while using fewer tokens, reducing context overhead by up to 98.7%. This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Learn how code execution with the Model Context Protocol enables agents to handle more tools while using fewer tokens, reducing context overhead by up to 98.7%.",
+        "conciseWhyRelevant": "Code execution with MCP: building more efficient AI agents \\ Anthropic is a fresh ai, engineering signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "Code execution with MCP: building more efficient AI agents \\ Anthropic is a current ai, engineering, frontier-models signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "brief"
+      },
+      {
+        "id": "2026-07-12-article-https-www-anthropic-com-engineering-advanced-tool-use-fe2899cf9c-7",
+        "articleId": "article-https-www-anthropic-com-engineering-advanced-tool-use-fe2899cf9c",
+        "sourceId": "subscription-anthropic-engineering",
+        "sourceName": "Anthropic Engineering",
+        "title": "Introducing advanced tool use on the Claude Developer Platform \\ Anthropic",
+        "url": "https://www.anthropic.com/engineering/advanced-tool-use",
+        "publishedAt": "2026-07-07",
+        "summary": "Claude can now discover, learn, and execute tools dynamically to enable agents that take action in the real world. Here’s how. ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicIntroducing advanced tool use on the Claude Developer PlatformPublished Nov 24, 2025 We’ve added three new beta features that let Claude discover, learn, and execute tools dynamically.",
+        "whyItMatters": "Anthropic Engineering is a tracked source for ai, engineering, frontier-models. Claude can now discover, learn, and execute tools dynamically to enable agents that take action in the real world. Here’s how. This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Claude can now discover, learn, and execute tools dynamically to enable agents that take action in the real world. Here’s how.",
+        "conciseWhyRelevant": "Introducing advanced tool use on the Claude Developer Platform \\ Anthropic is a fresh ai, engineering signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "Introducing advanced tool use on the Claude Developer Platform \\ Anthropic is a current ai, engineering, frontier-models signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "brief"
+      },
+      {
+        "id": "2026-07-12-article-https-www-anthropic-com-engineering-effective-harnesses-for-long-running-8",
+        "articleId": "article-https-www-anthropic-com-engineering-effective-harnesses-for-long-running-agents-c2414e3a01",
+        "sourceId": "subscription-anthropic-engineering",
+        "sourceName": "Anthropic Engineering",
+        "title": "Effective harnesses for long-running agents \\ Anthropic",
+        "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        "publishedAt": "2026-07-07",
+        "summary": "Anthropic is an AI safety and research company that&#x27;s working to build reliable, interpretable, and steerable AI systems. ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicEffective harnesses for long-running agentsPublished Nov 26, 2025 Agents still face challenges working across many context windows. We looked to human engineers for inspiration in creating a more effective harness for long-running agents.",
+        "whyItMatters": "Anthropic Engineering is a tracked source for ai, engineering, frontier-models. Anthropic is an AI safety and research company that&#x27;s working to build reliable, interpretable, and steerable AI systems. This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Anthropic is an AI safety and research company that&#x27;s working to build reliable, interpretable, and steerable AI systems.",
+        "conciseWhyRelevant": "Effective harnesses for long-running agents \\ Anthropic is a fresh ai, engineering signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "Effective harnesses for long-running agents \\ Anthropic is a current ai, engineering, frontier-models signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "brief"
+      },
+      {
+        "id": "2026-07-12-article-https-www-anthropic-com-engineering-demystifying-evals-for-ai-agents-414-9",
+        "articleId": "article-https-www-anthropic-com-engineering-demystifying-evals-for-ai-agents-414ce4b52e",
+        "sourceId": "subscription-anthropic-engineering",
+        "sourceName": "Anthropic Engineering",
+        "title": "Demystifying evals for AI agents \\ Anthropic",
+        "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+        "publishedAt": "2026-07-07",
+        "summary": "Demystifying evals for AI agents ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicDemystifying evals for AI agentsPublished Jan 09, 2026 The capabilities that make agents useful also make them difficult to evaluate. The strategies that work across deployments combine techniques to match the complexity of the systems they measure.",
+        "whyItMatters": "Anthropic Engineering is a tracked source for ai, engineering, frontier-models. Demystifying evals for AI agents ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicDemystifying evals for AI agentsPublished Jan 09, 2026 The capabilities that make agents useful also make them difficul... This is relevant because it adds a fresh signal from that stream without repeating older NLJR items.",
+        "conciseSummary": "Demystifying evals for AI agents ResearchPolicyCommitmentsLearnNewsTry ClaudeEngineering at AnthropicDemystifying evals for AI agentsPublished Jan 09, 2026 The capabilities that make agents useful also make them difficult to evaluate.",
+        "conciseWhyRelevant": "Demystifying evals for AI agents \\ Anthropic is a fresh ai, engineering signal with reuse potential for momo's strategy work.",
+        "relevance": [
+          "Strategy",
+          "LinkedIn",
+          "XHS"
+        ],
+        "suggestedUse": [
+          "Topic seed",
+          "Strategy signal",
+          "XHS angle",
+          "LinkedIn angle"
+        ],
+        "topicAngle": "Demystifying evals for AI agents \\ Anthropic is a current ai, engineering, frontier-models signal worth tracking for future commentary.",
+        "priority": "high",
+        "detailLevel": "brief"
+      }
+    ],
+    "recommendedItemIds": [
+      "article-how-tech-workers-actually-feel-about-ai-in-2026-annual-ai-sentiment-survey-noam--3453698be7",
+      "article-the-pragmatic-engineer-ama-b73c8f8250",
+      "article-what-a-harness-is-and-how-to-build-one-with-claude-agent-sdk-6a4bfe5008"
+    ],
+    "sourceHealth": {
+      "activeSources": 27,
+      "activeSubscriptions": 24,
+      "sourcesChecked": 24,
+      "sourceErrors": 1,
+      "needsUrlConfirmation": 1,
+      "keywordWatches": 3,
+      "newArticlesAvailable": 11,
+      "processedArticles": 74,
+      "newArticlesDiscovered": 1,
+      "errorSources": [
+        {
+          "sourceId": "subscription-pirate-wires",
+          "name": "Pirate Wires",
+          "reason": "HTTP error 429 fetching https://www.piratewires.com/feed"
+        }
+      ]
+    }
+  },
+  "archive": [
+    {
+      "date": "2026-07-12",
+      "path": "content_pipeline/nljr_archive/2026-07-12.md",
+      "itemCount": 9,
+      "generatedAt": "2026-07-12T16:58:00.256Z",
+      "summary": "Lenny's Newsletter, The Pragmatic Engineer, Lenny's Newsletter, The Pragmatic Engineer, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering"
+    },
+    {
+      "date": "2026-07-10",
+      "path": "content_pipeline/nljr_archive/2026-07-10.md",
+      "itemCount": 3,
+      "generatedAt": "2026-07-10T12:02:04.582Z",
+      "summary": "The Pragmatic Engineer, Product Growth, Lenny's Newsletter"
+    },
+    {
+      "date": "2026-07-09",
+      "path": "content_pipeline/nljr_archive/2026-07-09.md",
+      "itemCount": 3,
+      "generatedAt": "2026-07-09T13:11:44.511Z",
+      "summary": "Lenny's Newsletter, Lenny's Podcast, Lenny's Podcast"
+    },
+    {
+      "date": "2026-07-08",
+      "path": "content_pipeline/nljr_archive/2026-07-08.md",
+      "itemCount": 2,
+      "generatedAt": "2026-07-08T21:51:34.878Z",
+      "summary": "Lenny's Podcast, Lenny's Podcast"
+    },
+    {
+      "date": "2026-07-07",
+      "path": "content_pipeline/nljr_archive/2026-07-07.md",
+      "itemCount": 10,
+      "generatedAt": "2026-07-07T17:04:31.151Z",
+      "summary": "Lenny's Newsletter, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering, Anthropic Engineering"
+    },
+    {
+      "date": "2026-07-06",
+      "path": "content_pipeline/nljr_archive/2026-07-06.md",
+      "itemCount": 3,
+      "generatedAt": "2026-07-06T17:13:29.129776+00:00",
+      "summary": "Lenny's Newsletter, Lenny's Newsletter, a16z YouTube"
+    },
+    {
+      "date": "2026-07-05",
+      "path": "content_pipeline/nljr_archive/2026-07-05.md",
+      "itemCount": 0,
+      "generatedAt": "2026-07-06T01:07:38.690315+00:00",
+      "summary": "No new qualifying posts."
+    },
+    {
+      "date": "2026-07-04",
+      "path": "content_pipeline/nljr_archive/2026-07-04.md",
+      "itemCount": 0,
+      "generatedAt": "2026-07-05T03:49:43.142590+00:00",
+      "summary": "No new qualifying posts."
+    },
+    {
+      "date": "2026-07-03",
+      "path": "content_pipeline/nljr_archive/2026-07-03.md",
+      "itemCount": 3,
+      "generatedAt": "2026-07-04T00:35:14.401282+00:00",
+      "summary": "a16z, The Pragmatic Engineer, a16z crypto"
+    },
+    {
+      "date": "2026-07-01",
+      "path": "content_pipeline/nljr_archive/2026-07-01.md",
+      "itemCount": 2,
+      "generatedAt": "2026-07-01T14:45:11.893033+00:00",
+      "summary": "The Pragmatic Engineer, Lenny's Newsletter"
+    },
+    {
+      "date": "2026-06-30",
+      "path": "content_pipeline/nljr_archive/2026-06-30.md",
+      "itemCount": 2,
+      "generatedAt": "2026-06-30T14:30:54.576292+00:00",
+      "summary": "Lenny's Newsletter, a16z"
+    },
+    {
+      "date": "2026-06-29",
+      "path": "content_pipeline/nljr_archive/2026-06-29.md",
+      "itemCount": 8,
+      "generatedAt": "2026-06-30T01:18:29.876675+00:00",
+      "summary": "Lenny's Newsletter, Lenny's Newsletter, Product Growth, Lenny's Newsletter, a16z, a16z, a16z crypto, a16z"
+    },
+    {
+      "date": "2026-06-26",
+      "path": "content_pipeline/nljr_archive/2026-06-26.md",
+      "itemCount": 1,
+      "generatedAt": "2026-06-26T13:33:17.141880+00:00",
+      "summary": "a16z crypto"
+    },
+    {
+      "date": "2026-06-25",
+      "path": "content_pipeline/nljr_archive/2026-06-25.md",
+      "itemCount": 4,
+      "generatedAt": "2026-06-25T15:15:43.997795+00:00",
+      "summary": "Product Growth, a16z, The Pragmatic Engineer, a16z"
+    },
+    {
+      "date": "2026-06-24",
+      "path": "content_pipeline/nljr_archive/2026-06-24.md",
+      "itemCount": 1,
+      "generatedAt": "2026-06-24T14:05:38.279538+00:00",
+      "summary": "Lenny's Newsletter"
+    },
+    {
+      "date": "2026-06-23",
+      "path": "content_pipeline/nljr_archive/2026-06-23.md",
+      "itemCount": 6,
+      "generatedAt": "2026-06-23T15:32:34.584745+00:00",
+      "summary": "a16z, Lenny's Newsletter, a16z, Lenny's Newsletter, a16z, The Pragmatic Engineer"
+    },
+    {
+      "date": "2026-06-22",
+      "path": "content_pipeline/nljr_archive/2026-06-22.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-22T15:08:43.4024367+00:00",
+      "summary": "Lenny's Newsletter, a16z, Lenny's Newsletter"
+    },
+    {
+      "date": "2026-06-20",
+      "path": "content_pipeline/nljr_archive/2026-06-20.md",
+      "itemCount": 2,
+      "generatedAt": "2026-06-20T15:47:10.855792+00:00",
+      "summary": "Bonnie Yu, a16z crypto"
+    },
+    {
+      "date": "2026-06-19",
+      "path": "content_pipeline/nljr_archive/2026-06-19.md",
+      "itemCount": 2,
+      "generatedAt": "2026-06-19T14:03:04.611076+00:00",
+      "summary": "a16z, a16z crypto"
+    },
+    {
+      "date": "2026-06-18",
+      "path": "content_pipeline/nljr_archive/2026-06-18.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-19T00:06:26.559Z",
+      "summary": "The Pragmatic Engineer, a16z, a16z"
+    },
+    {
+      "date": "2026-06-17",
+      "path": "content_pipeline/nljr_archive/2026-06-17.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-17T13:30:29.439Z",
+      "summary": "Dr. Fei-Fei Li, a16z, Anthropic Engineering"
+    },
+    {
+      "date": "2026-06-16",
+      "path": "content_pipeline/nljr_archive/2026-06-16.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-16T13:27:45.897980+00:00",
+      "summary": "Dr. Fei-Fei Li, a16z, Anthropic Engineering"
+    },
+    {
+      "date": "2026-06-15",
+      "path": "content_pipeline/nljr_archive/2026-06-15.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-15T14:48:54.547747+00:00",
+      "summary": "Dr. Fei-Fei Li, a16z, Anthropic Engineering"
+    },
+    {
+      "date": "2026-06-14",
+      "path": "content_pipeline/nljr_archive/2026-06-14.md",
+      "itemCount": 3,
+      "generatedAt": "2026-06-15T02:17:55.834910+00:00",
+      "summary": "From Words to Worlds: Spatial Intelligence is AI's Next Frontier, a16z, AI by Aakash"
+    }
+  ]
+}

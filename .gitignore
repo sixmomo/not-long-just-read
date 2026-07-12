@@ -1,11 +1,49 @@
-__pycache__/
-*.pyc
-*.log
-*.zip
-.DS_Store
-.env
-.venv/
+# Dependencies and local environments
 node_modules/
-data/*.json
-content_pipeline/nljr_archive/*.md
-!.gitkeep
+.venv/
+.venv-*/
+venv/
+env/
+
+# Local secrets and machine-specific config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# Runtime output
+logs/
+*.log
+.server-*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local/private XHS operating data
+archive/
+performance/
+trend_inbox/
+content_pipeline/
+!content_pipeline/nljr_archive/
+!content_pipeline/nljr_archive/**
+strategy/
+00 Home.md
+references/
+ui/data/xhs-data.json
+ui/data/linkedin-overrides.json
+ui/data/templates/
+
+# Temporary local clones / imported skills
+_tmp_*/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

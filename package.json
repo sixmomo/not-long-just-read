@@ -1,12 +1,11 @@
 {
-  "name": "not-long-just-read",
-  "version": "0.3.0",
+  "name": "xhs-ops-codex",
+  "version": "0.1.0",
   "private": true,
-  "description": "Local-first daily reading and signal system with an agent skill and Web UI console.",
   "type": "module",
   "scripts": {
-    "start": "node server.mjs",
-    "refresh": "node scripts/refresh_nljr.js",
-    "test": "node scripts/test_nljr.js"
+    "dev": "node server.mjs",
+    "dev:fallback": "python scripts/local_test_server.py",
+    "check": "node -e \"const fs=require('fs'); new Function(fs.readFileSync('./ui/app.js','utf8')); JSON.parse(fs.readFileSync('./ui/data/xhs-data.json','utf8').replace(/^\\uFEFF/,'')); console.log('check ok')\""
   }
 }

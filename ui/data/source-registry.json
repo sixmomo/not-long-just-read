@@ -1,0 +1,942 @@
+{
+  "meta": {
+    "name": "NLJR Source Registry",
+    "description": "Unified input list for Not Long; Just Read daily feed signals.",
+    "updatedAt": "2026-07-12"
+  },
+  "sources": [
+    {
+      "id": "subscription-1783706798521",
+      "name": "New Subscription",
+      "sourceMode": "subscription",
+      "type": "website",
+      "status": "active",
+      "scanStatus": "no_new_posts",
+      "lastError": "",
+      "priority": "medium",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [],
+      "notes": "",
+      "url": "",
+      "fetchMethod": "rss",
+      "feedUrl": "",
+      "homepageUrl": "",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": ""
+    },
+    {
+      "id": "subscription-1783706711949",
+      "name": "New Subscription",
+      "sourceMode": "subscription",
+      "type": "website",
+      "status": "archived",
+      "scanStatus": "never_checked",
+      "lastError": "",
+      "priority": "medium",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [],
+      "notes": "",
+      "url": "",
+      "fetchMethod": "rss",
+      "feedUrl": "",
+      "homepageUrl": "",
+      "lastCheckedAt": "",
+      "lastItemSeen": ""
+    },
+    {
+      "id": "subscription-1783706706250",
+      "name": "AI Engineer",
+      "sourceMode": "subscription",
+      "type": "Youtube",
+      "status": "active",
+      "scanStatus": "no_new_posts",
+      "lastError": "",
+      "priority": "high",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [],
+      "notes": "",
+      "url": "https://www.youtube.com/@aiDotEngineer/videos",
+      "fetchMethod": "rss",
+      "feedUrl": "",
+      "homepageUrl": "",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": ""
+    },
+    {
+      "id": "manual-yc-40-year-old-solo-founder",
+      "name": "The Age Of The 40-Year-Old Solo Founder Is Here",
+      "sourceMode": "manual_inbox",
+      "type": "youtube_video",
+      "status": "archived",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "consulting",
+        "marketing-ops",
+        "solo-founder",
+        "ai-agents"
+      ],
+      "notes": "Queued for the June 23 NLJR. Focus on the marketing operating-system model for a consulting business: positioning, website, analytics, CRM, SEO/AEO, and follow-up loops.",
+      "url": "https://www.youtube.com/watch?v=8OOuCnZB-4o",
+      "sourceConfidence": "verified_video",
+      "acceptedFormats": [
+        "link"
+      ],
+      "defaultRelevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "capturedAt": "2026-06-22",
+      "publishedAt": "2026-06-19",
+      "sourceName": "Y Combinator",
+      "publicationName": "Y Combinator",
+      "processingStatus": "queued",
+      "scheduledFor": "2026-06-23"
+    },
+    {
+      "id": "manual-dr-fei-fei-spatial-intelligence",
+      "name": "From Words to Worlds: Spatial Intelligence is AI's Next Frontier",
+      "sourceMode": "manual_inbox",
+      "type": "substack_post",
+      "status": "archived",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "spatial-intelligence",
+        "world-models",
+        "ai-frontier"
+      ],
+      "notes": "Single manual source post from Dr. Fei-Fei Li. Useful for NLJR and future topic seeds around world models and spatial intelligence.",
+      "url": "https://drfeifei.substack.com/p/from-words-to-worlds-spatial-intelligence",
+      "archiveUrl": "https://drfeifei.substack.com/archive",
+      "homepageUrl": "https://drfeifei.substack.com/",
+      "sourceConfidence": "verified_post",
+      "acceptedFormats": [
+        "link"
+      ],
+      "defaultRelevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "capturedAt": "2026-06-15",
+      "publishedAt": "2025-11-10",
+      "sourceName": "Dr. Fei-Fei Li",
+      "publicationName": "Dr. Fei-Fei Li",
+      "processingStatus": "processed",
+      "processedAt": "2026-06-15"
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://www.a16z.news/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "America: The Next 250 Years",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-a16z",
+      "name": "a16z",
+      "url": "https://www.a16z.news/",
+      "archiveUrl": "https://www.a16z.news/archive",
+      "homepageUrl": "https://www.a16z.news/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn"
+      ],
+      "tags": [
+        "venture",
+        "ai",
+        "startups"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "blog",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "https://www.anthropic.com/engineering/claude-think-tool",
+      "notes": "Read posts from Anthropic's public engineering page for NLJR.",
+      "id": "subscription-anthropic-engineering",
+      "name": "Anthropic Engineering",
+      "url": "https://www.anthropic.com/engineering",
+      "archiveUrl": "https://www.anthropic.com/engineering",
+      "homepageUrl": "https://www.anthropic.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "ai",
+        "engineering",
+        "frontier-models"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://a16zcrypto.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "The most underrated token type",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-a16z-crypto",
+      "name": "a16z crypto",
+      "url": "https://a16zcrypto.substack.com/",
+      "archiveUrl": "https://a16zcrypto.substack.com/archive",
+      "homepageUrl": "https://a16zcrypto.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "Strategy",
+        "LinkedIn"
+      ],
+      "tags": [
+        "crypto",
+        "ai",
+        "startups"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://www.aibyaakash.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Fable 5 is back. Stop Wasting It on Tasks Sonnet Can Do",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-ai-by-aakash",
+      "name": "AI by Aakash",
+      "url": "https://www.aibyaakash.com/",
+      "archiveUrl": "https://www.aibyaakash.com/archive",
+      "homepageUrl": "https://www.aibyaakash.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "ai",
+        "tools",
+        "agents"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://amankhan.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Beauty of pakistan Bahria town karachi",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-ai-product-playbook",
+      "name": "AI Product Playbook",
+      "url": "https://amankhan.substack.com/",
+      "archiveUrl": "https://amankhan.substack.com/archive",
+      "homepageUrl": "https://amankhan.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "ai-product",
+        "pm",
+        "product"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://bonnieyu.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Building a Video Game with My 8 Year Old",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-bonnie-yu",
+      "name": "Bonnie Yu",
+      "url": "https://bonnieyu.substack.com/",
+      "archiveUrl": "https://bonnieyu.substack.com/archive",
+      "homepageUrl": "https://bonnieyu.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "XHS"
+      ],
+      "tags": [
+        "ai-pm",
+        "pm",
+        "career"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://blog.brianbalfour.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "AI Growth 📈",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-brian-balfour",
+      "name": "Brian Balfour",
+      "url": "https://blog.brianbalfour.com/",
+      "archiveUrl": "https://blog.brianbalfour.com/archive",
+      "homepageUrl": "https://blog.brianbalfour.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "Strategy",
+        "LinkedIn"
+      ],
+      "tags": [
+        "growth",
+        "strategy",
+        "product"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://careerbrew.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "🔴 Career Brew (🎓☕) - 9th July - 55 Hottest Early to Mid Career Jobs - Do Not Miss",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-career-brew",
+      "name": "Career Brew",
+      "url": "https://careerbrew.substack.com/",
+      "archiveUrl": "https://careerbrew.substack.com/archive",
+      "homepageUrl": "https://careerbrew.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "XHS",
+        "Strategy"
+      ],
+      "tags": [
+        "career",
+        "jobs",
+        "transition"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://www.thirdoikos.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Who Has the Keys to Your Household? A Conversation with Andy Crouch",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-claires-substack",
+      "name": "Claire's Substack",
+      "url": "https://www.thirdoikos.com/",
+      "archiveUrl": "https://www.thirdoikos.com/archive",
+      "homepageUrl": "https://www.thirdoikos.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "Strategy",
+        "LinkedIn"
+      ],
+      "tags": [
+        "product",
+        "ai",
+        "operators"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://drfeifei.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "A Functional Taxonomy of World Models",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-dr-fei-fei-li",
+      "name": "Dr. Fei-Fei Li",
+      "url": "https://drfeifei.substack.com/",
+      "archiveUrl": "https://drfeifei.substack.com/archive",
+      "homepageUrl": "https://drfeifei.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "Strategy",
+        "LinkedIn"
+      ],
+      "tags": [
+        "ai",
+        "research",
+        "leadership"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://www.lennysnewsletter.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "How tech workers actually feel about AI in 2026 | Annual AI sentiment survey (Noam Segal)",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-lennys-newsletter",
+      "name": "Lenny's Newsletter",
+      "url": "https://www.lennysnewsletter.com/",
+      "archiveUrl": "https://www.lennysnewsletter.com/archive",
+      "homepageUrl": "https://www.lennysnewsletter.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "product",
+        "growth",
+        "career"
+      ],
+      "scanStatus": "healthy",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "paused",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "",
+      "lastCheckedAt": "2026-07-05T03:13:33.549466+00:00",
+      "lastItemSeen": "",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-lias-substack",
+      "name": "Lia's Substack",
+      "url": "",
+      "archiveUrl": "",
+      "homepageUrl": "",
+      "sourceConfidence": "needs_url_confirmation",
+      "priority": "medium",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "ai",
+        "product"
+      ],
+      "scanStatus": "error",
+      "lastError": "No feedUrl, archiveUrl, homepageUrl, or url configured."
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://www.piratewires.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-pirate-wires",
+      "name": "Pirate Wires",
+      "url": "https://www.piratewires.com/",
+      "archiveUrl": "https://www.piratewires.com/archive",
+      "homepageUrl": "https://www.piratewires.com/",
+      "sourceConfidence": "needs_archive_verification",
+      "priority": "low",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "tech",
+        "silicon-valley",
+        "culture"
+      ],
+      "scanStatus": "error",
+      "lastError": "HTTP error 429 fetching https://www.piratewires.com/feed"
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://www.news.aakashg.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "The PM's Guide to AI Design that isn't Slop",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-product-growth",
+      "name": "Product Growth",
+      "url": "https://www.news.aakashg.com/",
+      "archiveUrl": "https://www.news.aakashg.com/archive",
+      "homepageUrl": "https://www.news.aakashg.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "product",
+        "growth",
+        "pm"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://eugenewei.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Remains of the Day: Issue 12",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-remains-of-the-day",
+      "name": "Remains of the Day",
+      "url": "https://eugenewei.substack.com/",
+      "archiveUrl": "https://eugenewei.substack.com/archive",
+      "homepageUrl": "https://eugenewei.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "low",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "tech",
+        "commentary"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://xartup.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Fundraising Doesn't Pause the Business. It Damages It.",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-spotlight-by-xartup",
+      "name": "Spotlight by Xartup",
+      "url": "https://xartup.substack.com/",
+      "archiveUrl": "https://xartup.substack.com/archive",
+      "homepageUrl": "https://xartup.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "LinkedIn",
+        "Strategy"
+      ],
+      "tags": [
+        "startups",
+        "business",
+        "ai"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://colinmatthews.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "How to Turn Figma Designs into Working Prototypes with Claude Code",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-tech-for-product",
+      "name": "Tech For Product",
+      "url": "https://colinmatthews.substack.com/",
+      "archiveUrl": "https://colinmatthews.substack.com/archive",
+      "homepageUrl": "https://colinmatthews.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "XHS",
+        "Strategy"
+      ],
+      "tags": [
+        "pm",
+        "technical-fluency",
+        "product"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://newsletter.pragmaticengineer.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "The Pulse: What can we learn from Bun’s rapid Rust rewrite with AI?",
+      "notes": "Read posts from the public /archive page for NLJR.",
+      "id": "subscription-the-pragmatic-engineer",
+      "name": "The Pragmatic Engineer",
+      "url": "https://newsletter.pragmaticengineer.com/",
+      "archiveUrl": "https://newsletter.pragmaticengineer.com/archive",
+      "homepageUrl": "https://newsletter.pragmaticengineer.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "engineering",
+        "ai",
+        "tech-market"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://post.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "“I had become haunted by the simplest question: What did I care about?”",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-the-substack-post",
+      "name": "The Substack Post",
+      "url": "https://post.substack.com/",
+      "archiveUrl": "https://post.substack.com/archive",
+      "homepageUrl": "https://post.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "low",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "creator",
+        "newsletter"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://jacalulu.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "Creativity at the Speed of Voice",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-thursday-thoughts",
+      "name": "Thursday Thoughts",
+      "url": "https://jacalulu.substack.com/",
+      "archiveUrl": "https://jacalulu.substack.com/archive",
+      "homepageUrl": "https://jacalulu.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "Strategy"
+      ],
+      "tags": [
+        "product",
+        "career"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "sourceMode": "subscription",
+      "type": "substack",
+      "status": "active",
+      "fetchMethod": "archive_html_first",
+      "feedUrl": "https://zarazhang.substack.com/feed",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "What people misunderstand about building in public",
+      "notes": "Added from Substack screenshot. Confirm URL/archive path before automated NLJR scanning.",
+      "id": "subscription-zaras-newsletter",
+      "name": "Zara's Newsletter",
+      "url": "https://zarazhang.substack.com/",
+      "archiveUrl": "https://zarazhang.substack.com/archive",
+      "homepageUrl": "https://zarazhang.substack.com/",
+      "sourceConfidence": "verified_archive",
+      "priority": "medium",
+      "relevance": [
+        "Strategy",
+        "XHS"
+      ],
+      "tags": [
+        "ai",
+        "career",
+        "product"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "id": "keyword-ai-pm-portfolio",
+      "name": "AI PM Portfolio Watch",
+      "sourceMode": "keyword_watch",
+      "type": "keyword",
+      "status": "active",
+      "priority": "high",
+      "relevance": [
+        "XHS",
+        "Strategy"
+      ],
+      "tags": [
+        "ai-pm",
+        "portfolio",
+        "career"
+      ],
+      "notes": "Track current discussion around AI PM portfolio and project credibility.",
+      "keywords": [
+        "AI PM portfolio",
+        "AI product manager portfolio",
+        "AI PM project"
+      ],
+      "platforms": [
+        "Google",
+        "YouTube",
+        "Reddit",
+        "Manual XHS"
+      ],
+      "language": [
+        "English",
+        "Chinese"
+      ],
+      "lookbackHours": 24
+    },
+    {
+      "id": "keyword-ai-pm-interview",
+      "name": "AI PM Interview Watch",
+      "sourceMode": "keyword_watch",
+      "type": "keyword",
+      "status": "active",
+      "priority": "high",
+      "relevance": [
+        "XHS",
+        "Strategy"
+      ],
+      "tags": [
+        "ai-pm",
+        "interview",
+        "career"
+      ],
+      "notes": "Watch for interview pain, project presentation, and transition questions.",
+      "keywords": [
+        "AI PM interview",
+        "AI product manager interview",
+        "AI PM case interview"
+      ],
+      "platforms": [
+        "Google",
+        "YouTube",
+        "Reddit",
+        "Manual XHS"
+      ],
+      "language": [
+        "English",
+        "Chinese"
+      ],
+      "lookbackHours": 24
+    },
+    {
+      "id": "keyword-ai-ops-small-business",
+      "name": "AI Ops For Small Business Watch",
+      "sourceMode": "keyword_watch",
+      "type": "keyword",
+      "status": "active",
+      "priority": "medium",
+      "relevance": [
+        "LinkedIn",
+        "Strategy"
+      ],
+      "tags": [
+        "ai-ops",
+        "small-business",
+        "workflow"
+      ],
+      "notes": "Track practical AI Ops and workflow automation demand from non-technical owners.",
+      "keywords": [
+        "AI ops small business",
+        "AI workflow automation",
+        "AI operating system business"
+      ],
+      "platforms": [
+        "Google",
+        "YouTube",
+        "Reddit"
+      ],
+      "language": [
+        "English"
+      ],
+      "lookbackHours": 24
+    },
+    {
+      "id": "subscription-lennys-podcast",
+      "name": "Lenny's Podcast",
+      "sourceMode": "subscription",
+      "type": "podcast",
+      "status": "active",
+      "priority": "high",
+      "relevance": [
+        "LinkedIn",
+        "Strategy"
+      ],
+      "tags": [
+        "product",
+        "growth",
+        "career"
+      ],
+      "notes": "Useful for product strategy, PM career signals, and market language.",
+      "url": "https://www.lennyspodcast.com/",
+      "fetchMethod": "rss",
+      "feedUrl": "",
+      "homepageUrl": "https://www.lennyspodcast.com/",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "https://substackcdn.com/bundle/static/css/49127.813be60f.css",
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    },
+    {
+      "id": "manual-xhs-screenshot-inbox",
+      "name": "XHS Screenshot Inbox",
+      "sourceMode": "manual_inbox",
+      "type": "screenshot",
+      "status": "archived",
+      "priority": "high",
+      "relevance": [
+        "XHS",
+        "Strategy"
+      ],
+      "tags": [
+        "xhs",
+        "trend",
+        "manual"
+      ],
+      "notes": "Phone screenshots from Xiaohongshu trend checks.",
+      "inboxPath": "trend_inbox/xhs_screenshots",
+      "acceptedFormats": [
+        "screenshot",
+        "note"
+      ],
+      "defaultRelevance": [
+        "XHS",
+        "Strategy"
+      ]
+    },
+    {
+      "id": "manual-random-link-inbox",
+      "name": "Random Link Inbox",
+      "sourceMode": "manual_inbox",
+      "type": "link",
+      "status": "archived",
+      "priority": "medium",
+      "relevance": [
+        "XHS",
+        "LinkedIn",
+        "Strategy"
+      ],
+      "tags": [
+        "link",
+        "idea",
+        "manual"
+      ],
+      "notes": "Ad hoc links, screenshots, or ideas sent in chat.",
+      "inboxPath": "trend_inbox/manual_links",
+      "acceptedFormats": [
+        "link",
+        "screenshot",
+        "note"
+      ],
+      "defaultRelevance": [
+        "XHS",
+        "LinkedIn",
+        "Strategy"
+      ]
+    },
+    {
+      "id": "subscription-a16z-youtube",
+      "name": "a16z YouTube",
+      "sourceMode": "subscription",
+      "type": "youtube_channel",
+      "status": "active",
+      "fetchMethod": "rss_first",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ1VQj-37kl2yS_VUhfQHsw",
+      "lastCheckedAt": "2026-07-12T16:58:00.256Z",
+      "lastItemSeen": "How AI Is Redefining What It Means to Be Creative | Deep Dives with a16z",
+      "notes": "Read posts from the public YouTube channel feeds for NLJR.",
+      "url": "https://www.youtube.com/@a16z/videos",
+      "archiveUrl": "https://www.youtube.com/@a16z/videos",
+      "homepageUrl": "https://www.youtube.com/@a16z",
+      "sourceConfidence": "verified_archive",
+      "priority": "high",
+      "relevance": [
+        "Strategy",
+        "LinkedIn",
+        "XHS"
+      ],
+      "tags": [
+        "ai",
+        "startups",
+        "tech-market"
+      ],
+      "scanStatus": "no_new_posts",
+      "lastError": ""
+    }
+  ]
+}

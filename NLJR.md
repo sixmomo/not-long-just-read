@@ -2,7 +2,7 @@
 type: dashboard
 area: nljr
 status: active
-updated: 2026-07-07
+updated: 2026-06-22
 ---
 
 # NLJR
@@ -11,10 +11,14 @@ Not Long, Just Read is the daily reading and idea-discovery archive.
 
 ## Latest Edition
 
-[[content_pipeline/nljr_archive/2026-07-07|July 7, 2026]]
+[[content_pipeline/nljr_archive/2026-07-12|July 12, 2026]]
 
 ## Daily Editions
 
+- [[content_pipeline/nljr_archive/2026-07-12|July 12, 2026]]
+- [[content_pipeline/nljr_archive/2026-07-10|July 10, 2026]]
+- [[content_pipeline/nljr_archive/2026-07-09|July 9, 2026]]
+- [[content_pipeline/nljr_archive/2026-07-08|July 8, 2026]]
 - [[content_pipeline/nljr_archive/2026-07-07|July 7, 2026]]
 - [[content_pipeline/nljr_archive/2026-07-06|July 6, 2026]]
 - [[content_pipeline/nljr_archive/2026-07-05|July 5, 2026]]
@@ -49,5 +53,13 @@ path:"content_pipeline/nljr_archive" "NLJR Daily Feed"
 When an article produces a useful content idea:
 
 1. Open the daily edition.
-2. Link the idea to your local strategy notes or topic planner.
-3. Record a summary or outline.
+2. Link the idea to [[strategy/topic_matrix|Topic Matrix]] or a relevant strategy note.
+3. Create a brief from [[content_pipeline/templates/post_brief_template|Post Brief Template]].
+4. Add a link back to the NLJR edition in the brief's `source` property.
+
+## Related
+
+- [[00 Home|XHS Operating Dashboard]]
+- [[strategy/account_strategy|Account Strategy]]
+- [[strategy/topic_matrix|Topic Matrix]]
+- [[trend_inbox/trend_signal_template|Trend Signal Template]]

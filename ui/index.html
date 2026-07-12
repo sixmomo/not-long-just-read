@@ -3,24 +3,106 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NLJR Console</title>
+    <title>momo's Playground</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Local-first daily brief</p>
-        <h1>NLJR Console</h1>
-      </div>
-      <p class="topbar-status">Live discovery via Node.js scraper</p>
-    </header>
+    <div class="app-shell" id="app-shell">
+      <header class="global-header" aria-label="Global navigation">
+        <div class="header-inner utility-header">
+          <a class="brand-link nav-item active" href="./index.html" data-workspace="home" data-route="landing" aria-label="momo's Playground Home">
+            <span class="brand-symbol" aria-hidden="true">A</span>
+            <span>momo's Playground</span>
+          </a>
+          <button
+            class="mobile-menu-button"
+            id="mobile-menu-toggle"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
 
-    <main id="app-view" style="padding: 24px; max-width: 1400px; margin: 0 auto;">
-      <div class="loading-state">
-        <h3>Loading NLJR Console...</h3>
-        <p>Connecting to backend API...</p>
-      </div>
-    </main>
+        <div class="header-inner primary-header">
+          <nav class="primary-nav grouped-primary-nav" aria-label="Workspace pages">
+            <div class="nav-group" aria-label="Primary pages">
+              <div class="nav-group-links unified-nav-links" style="display: flex; gap: 20px; align-items: center;">
+                <a class="nav-item active" href="./index.html" data-workspace="home" data-route="landing">Home</a>
+                
+                <div class="nav-dropdown">
+                  <button class="nav-dropdown-btn" type="button">
+                    Social Media Ops <span style="font-size: 8px; margin-left: 2px;">▼</span>
+                  </button>
+                  <div class="nav-dropdown-content">
+                    <a class="nav-item" href="#topics" data-workspace="home" data-route="topics">Topics</a>
+                    <a class="nav-item" href="#articles" data-workspace="home" data-route="articles">Drafts</a>
+                    <a class="nav-item" href="#posts" data-workspace="home" data-route="posts">Posts</a>
+                    <a class="nav-item" href="#page-styles" data-workspace="home" data-route="page-styles">Image Style</a>
+                    <a class="nav-item" href="#strategy" data-workspace="home" data-route="strategy">Strategy</a>
+                  </div>
+                </div>
+
+                <a class="nav-item" href="#nljr" data-workspace="home" data-route="nljr">NLJR Console</a>
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        <div class="mobile-menu" id="mobile-menu" hidden>
+          <a class="nav-item active" href="./index.html" data-workspace="home" data-route="landing">Home</a>
+          <a class="nav-item" href="#topics" data-workspace="home" data-route="topics">Topics</a>
+          <a class="nav-item" href="#articles" data-workspace="home" data-route="articles">Drafts</a>
+          <a class="nav-item" href="#posts" data-workspace="home" data-route="posts">Posts</a>
+          <a class="nav-item" href="#nljr" data-workspace="home" data-route="nljr">NLJR Console</a>
+          <a class="nav-item" href="#page-styles" data-workspace="home" data-route="page-styles">Image Style</a>
+          <a class="nav-item" href="#strategy" data-workspace="home" data-route="strategy">Strategy</a>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <h2 id="page-title">Home</h2>
+          </div>
+        </header>
+
+        <section id="app-view" class="view" aria-live="polite"></section>
+      </main>
+
+      <footer class="site-footer" aria-label="Footer">
+        <div class="footer-brand">
+          <a class="brand-link nav-item" href="./index.html" data-workspace="home" data-route="landing" aria-label="momo's Playground Home">
+            <span class="brand-symbol" aria-hidden="true">A</span>
+            <span>momo's Playground</span>
+          </a>
+          <p>Show me how far and fast we can go!</p>
+        </div>
+        <div class="footer-grid">
+          <div>
+            <a href="./index.html" data-workspace="home" data-route="landing" class="footer-group-title nav-item">Home</a>
+          </div>
+          <div>
+            <span class="footer-group-title">Social Media Ops</span>
+            <a href="#topics" data-workspace="home" data-route="topics" class="nav-item">Topics</a>
+            <a href="#articles" data-workspace="home" data-route="articles" class="nav-item">Drafts</a>
+            <a href="#posts" data-workspace="home" data-route="posts" class="nav-item">Posts</a>
+            <a href="#page-styles" data-workspace="home" data-route="page-styles" class="nav-item">Image Style</a>
+            <a href="#strategy" data-workspace="home" data-route="strategy" class="nav-item">Strategy</a>
+          </div>
+          <div>
+            <span class="footer-group-title">NLJR</span>
+            <a href="#nljr-day" data-workspace="home" data-route="nljr-day" class="nav-item">Today’s NLJR</a>
+            <a href="#nljr" data-workspace="home" data-route="nljr" class="nav-item">NLJR Console</a>
+            <a href="#daily-archives" data-workspace="home" data-route="daily-archives" class="nav-item">Daily Archives</a>
+          </div>
+        </div>
+      </footer>
+    </div>
 
     <script src="./app.js"></script>
   </body>
