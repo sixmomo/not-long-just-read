@@ -4,11 +4,11 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PROJECT_ROOT = path.resolve(__dirname, "..", "..");
+const ROOT = path.resolve(__dirname, "..");
 
 // Load dotenv values if file exists
 try {
-  const envContent = await fs.readFile(path.join(PROJECT_ROOT, ".env"), "utf8");
+  const envContent = await fs.readFile(path.join(ROOT, ".env"), "utf8");
   for (const line of envContent.split("\n")) {
     const match = line.match(/^\s*([\w\.\-]+)\s*=\s*(.*)?\s*$/);
     if (match) {
@@ -24,7 +24,7 @@ try {
   // Ignore missing .env
 }
 
-const DATA_DIR = process.env.OPS_DATA_DIR || path.join(ROOT, "data");
+const DATA_DIR = process.env.OPS_DATA_DIR || path.join(ROOT, "ui", "data");
 const REGISTRY_PATH = path.join(DATA_DIR, "source-registry.json");
 const LEDGER_PATH = path.join(DATA_DIR, "nljr-article-ledger.json");
 const FEED_PATH = path.join(DATA_DIR, "nljr-feed.json");

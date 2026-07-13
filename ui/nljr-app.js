@@ -526,7 +526,7 @@ function consoleOverviewPanel() {
         <span class="pill">${activeSources.length} active sources</span>
       </div>
       ${state.actionMessage ? `<p class="action-message">${escapeHtml(state.actionMessage)}</p>` : ""}
-      <div class="metrics-grid home-metrics nljr-health-grid" style="margin-top: 20px;">
+      <div class="metrics-grid nljr-health-grid" style="margin-top: 20px;">
         ${metricCard("Active sources", String(health.activeSources ?? activeSourceCount()), "Sources currently eligible for NLJR generation.")}
         ${metricCard("Active subscriptions", String(health.activeSubscriptions ?? activeSubscriptionCount()), "Subscriptions checked for newly published posts.")}
         ${metricCard("Need URL confirmation", String(health.needsUrlConfirmation ?? needsUrlConfirmationCount()), "Sources saved but not yet ready for automated scanning.")}
@@ -756,9 +756,9 @@ function sourceManagementView() {
   return `
     ${consoleOverviewPanel()}
     <div class="source-panel-stack">
-      ${sourceModePanel("Keyword Watches", "keyword_watch")}
       ${sourceModePanel("Subscriptions", "subscription")}
       ${sourceModePanel("Adhocs", "manual_inbox")}
+      ${sourceModePanel("Keyword Watches", "keyword_watch")}
     </div>
     ${nljrArticleLedgerView()}
   `;
@@ -1118,6 +1118,15 @@ function render() {
     view.innerHTML = dailyArchivesView();
   }
 
+  let modalWrapper = document.querySelector("#modal-wrapper");
+  if (!modalWrapper) {
+    modalWrapper = document.createElement("div");
+    modalWrapper.id = "modal-wrapper";
+    document.body.appendChild(modalWrapper);
+  }
+  modalWrapper.innerHTML = modalView();
+  bindModalEvents();
+
   bindNavigation();
 }
 
@@ -1172,7 +1181,13 @@ function bindSourceManagementEvents() {
   });
   document.querySelectorAll("[data-add-source-mode]").forEach((button) => {
     button.addEventListener("click", async () => {
-      await addSourceRegistrySource(button.dataset.addSourceMode);
+      const mode = button.dataset.addSourceMode;
+      if (mode === "subscription") {
+        state.modal = { type: "add-subscription", name: "", url: "", error: "", saving: false };
+        render();
+      } else {
+        await addSourceRegistrySource(mode);
+      }
     });
   });
   document.querySelectorAll("[data-edit-source]").forEach((button) => {
@@ -1369,7 +1384,12 @@ document.addEventListener("click", (event) => {
 
   const addMode = target.dataset.addSourceMode;
   if (addMode) {
-    void addSourceRegistrySource(addMode);
+    if (addMode === "subscription") {
+      state.modal = { type: "add-subscription", name: "", url: "", error: "", saving: false };
+      render();
+    } else {
+      void addSourceRegistrySource(addMode);
+    }
   }
 
   const editId = target.dataset.editSource;
@@ -1403,3 +1423,101 @@ const { route, postId } = parseRouteHash(window.location.hash);
 state.route = route;
 state.postPageId = postId;
 void loadRealData();
+
+function modalView() {
+  if (!state.modal) return "";
+  if (state.modal.type === "add-subscription") {
+    return addSubscriptionModalView();
+  }
+  return "";
+}
+
+function addSubscriptionModalView() {
+  const { name, url, error, saving } = state.modal;
+  return `
+    <div class="modal-backdrop" role="presentation" id="modal-backdrop">
+      <section class="modal-panel" role="dialog" aria-modal="true" aria-label="Add Subscription">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Autodiscover</p>
+            <h3>Add New Subscription</h3>
+          </div>
+          <button class="ghost-button compact-action" type="button" id="modal-close-button">×</button>
+        </div>
+        <div class="modal-body" style="padding-top: 10px;">
+          <form id="add-subscription-form" style="display: grid; gap: 14px;">
+            ${error ? `<p class="action-message danger-action" style="margin: 0; padding: 10px; border-radius: 6px; background: #fff1f0; border: 1px solid #ffa39e; color: var(--danger); font-size: 13px;">${escapeHtml(error)}</p>` : ""}
+            <label style="display: grid; gap: 6px;">
+              <span class="nav-group-label" style="font-size: 11px;">Source Name (Optional)</span>
+              <input class="source-input" id="modal-source-name" type="text" placeholder="e.g. Lenny's Newsletter (autofilled if blank)" value="${escapeHtml(name)}" ${saving ? "disabled" : ""} />
+            </label>
+            <label style="display: grid; gap: 6px;">
+              <span class="nav-group-label" style="font-size: 11px;">Website or YouTube URL</span>
+              <input class="source-input" id="modal-source-url" type="url" required placeholder="e.g. https://www.youtube.com/@PeterYangYT" value="${escapeHtml(url)}" ${saving ? "disabled" : ""} />
+            </label>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+              <button class="ghost-button" type="button" id="modal-cancel-button" ${saving ? "disabled" : ""}>Cancel</button>
+              <button class="primary-button" type="submit" id="modal-submit-button" ${saving ? "disabled" : ""}>
+                ${saving ? "Autodiscovering..." : "Add Subscription"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function bindModalEvents() {
+  if (!state.modal) return;
+
+  const closeBtn = document.querySelector("#modal-close-button");
+  const cancelBtn = document.querySelector("#modal-cancel-button");
+  const backdrop = document.querySelector("#modal-backdrop");
+  const form = document.querySelector("#add-subscription-form");
+
+  const closeHandler = () => {
+    state.modal = null;
+    render();
+  };
+
+  if (closeBtn) closeBtn.addEventListener("click", closeHandler);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeHandler);
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) closeHandler();
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nameInput = document.querySelector("#modal-source-name");
+      const urlInput = document.querySelector("#modal-source-url");
+      if (!urlInput || !urlInput.value.trim()) return;
+
+      state.modal.name = nameInput ? nameInput.value : "";
+      state.modal.url = urlInput.value;
+      state.modal.saving = true;
+      state.modal.error = "";
+      render();
+
+      try {
+        const result = await apiRequest("/api/source-registry/autodiscover", {
+          method: "POST",
+          body: JSON.stringify({
+            name: state.modal.name,
+            url: state.modal.url
+          })
+        });
+        sourceRegistry = result.data || sourceRegistry;
+        state.actionMessage = `Successfully added: ${result.source.name}`;
+        state.modal = null;
+      } catch (err) {
+        state.modal.saving = false;
+        state.modal.error = err.message || "Failed to autodiscover subscription feed.";
+      }
+      render();
+    });
+  }
+}
