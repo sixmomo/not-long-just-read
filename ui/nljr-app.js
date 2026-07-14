@@ -870,6 +870,7 @@ function nljrTodayView() {
 }
 
 function nljrItemView(item, index) {
+  const isNewBriefingFormat = String(item.summary || "").includes("The Hook/TL;DR");
   return `
     <article class="nljr-item-card">
       <div class="strategy-card-header">
@@ -879,19 +880,20 @@ function nljrItemView(item, index) {
         </div>
         <span class="pill nljr-priority-pill ${item.priority === "high" ? "hot" : ""}">${escapeHtml(item.priority || "medium")}</span>
       </div>
-      <div>
-        <strong>Summary</strong>
-        <p>${escapeHtml(item.summary || "")}</p>
+      <div class="nljr-summary-body" style="margin-top: 12px; font-size: 14px; line-height: 1.6;">
+        ${renderMarkdown(item.summary || "")}
       </div>
-      <div>
-        <strong>Why it matters</strong>
-        <p>${escapeHtml(item.whyItMatters || "")}</p>
-      </div>
-      <div>
-        <strong>Topic angle</strong>
-        <p>${escapeHtml(item.topicAngle || "")}</p>
-      </div>
-      <div class="card-meta">
+      ${!isNewBriefingFormat ? `
+        <div style="margin-top: 12px;">
+          <strong>Why it matters</strong>
+          <p>${escapeHtml(item.whyItMatters || "")}</p>
+        </div>
+        <div style="margin-top: 12px;">
+          <strong>Topic angle</strong>
+          <p>${escapeHtml(item.topicAngle || "")}</p>
+        </div>
+      ` : ""}
+      <div class="card-meta" style="margin-top: 16px;">
         ${(item.relevance || []).map((label) => `<span class="pill">${escapeHtml(label)}</span>`).join("")}
         ${(item.suggestedUse || []).map((label) => `<span class="pill good">${escapeHtml(label)}</span>`).join("")}
       </div>
