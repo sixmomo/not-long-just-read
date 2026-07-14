@@ -1747,6 +1747,10 @@ async function serveStatic(req, res, url) {
   let requested;
 
   if (pathname === "/" || pathname === "/index.html") {
+    res.writeHead(302, { Location: "/xhs" });
+    res.end();
+    return;
+  } else if (pathname === "/xhs") {
     pathname = "/ui/index.html";
   } else if (pathname === "/NLJR" || pathname === "/nljr") {
     pathname = "/ui/nljr.html";
