@@ -1138,22 +1138,11 @@ function updatePrimaryNav() {
   primary.innerHTML = `
     <div class="nav-group" aria-label="Primary pages">
       <div class="nav-group-links unified-nav-links" style="display: flex; gap: 20px; align-items: center;">
-        <a class="nav-item" href="./index.html" data-workspace="home" data-route="landing">Home</a>
-        
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-btn" type="button">
-            Social Media Ops <span style="font-size: 8px; margin-left: 2px;">▼</span>
-          </button>
-          <div class="nav-dropdown-content">
-            <a class="nav-item" href="#topics" data-workspace="home" data-route="topics">Topics</a>
-            <a class="nav-item" href="#articles" data-workspace="home" data-route="articles">Drafts</a>
-            <a class="nav-item" href="#posts" data-workspace="home" data-route="posts">Posts</a>
-            <a class="nav-item" href="#page-styles" data-workspace="home" data-route="page-styles">Image Style</a>
-            <a class="nav-item" href="#strategy" data-workspace="home" data-route="strategy">Strategy</a>
-          </div>
-        </div>
-
-        <a class="nav-item" href="#nljr" data-workspace="home" data-route="nljr">NLJR Console</a>
+        <a class="nav-item" href="#topics" data-workspace="home" data-route="topics">Topics</a>
+        <a class="nav-item" href="#articles" data-workspace="home" data-route="articles">Drafts</a>
+        <a class="nav-item" href="#posts" data-workspace="home" data-route="posts">Posts</a>
+        <a class="nav-item" href="#page-styles" data-workspace="home" data-route="page-styles">Image Style</a>
+        <a class="nav-item" href="#strategy" data-workspace="home" data-route="strategy">Strategy</a>
       </div>
     </div>
   `;
