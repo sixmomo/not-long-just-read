@@ -473,9 +473,7 @@ function buildTopicAngle(article, source) {
     return sentenceTrim(`${title} is a current ${tags.slice(0, 3).join(", ")} signal worth tracking for future commentary.`);
   }
   return sentenceTrim(`${title} is a fresh signal from ${source.name || "a tracked source"}.`);
-}
-
-async function summarizeArticle(article, source) {
+}async function summarizeArticle(article, source) {
   if (article.curatedSummary) return;
   const response = await fetchWithTimeout(article.url);
   if (!response.ok) throw new Error(`HTTP error ${response.status} fetching article page ${article.url}`);
@@ -487,9 +485,73 @@ async function summarizeArticle(article, source) {
     throw new Error(INSUFFICIENT_CONTENT_REASON);
   }
 
-  const summary = summaryFromContent(pageData.description, pageData.paragraphs);
-  article.title = pageData.title || article.title || article.url;
-  article.summary = summary || sentenceTrim(pageData.description || `${article.title} is a new post from ${source.name || "this source"}.`, 700);
+  const title = pageData.title || article.title || article.url;
+  article.title = title;
+
+  const fallbackSummary = summaryFromContent(pageData.description, pageData.paragraphs);
+  const finalFallback = fallbackSummary || sentenceTrim(pageData.description || `${title} is a new post from ${source.name || "this source"}.`, 700);
+
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      console.log(`Using OpenAI to summarize: ${title}...`);
+      const contentToSummarize = `Title: ${title}\nDescription: ${pageData.description}\n\nContent:\n${pageData.paragraphs.slice(0, 12).join("\n\n")}`;
+      
+      const systemPrompt = `Act as a professional newsletter curator. Based on the 24-hour new updates from subscription list, including newsletters, or technical deep dives. Please extract and format the core information into a 'Not-Long-Just-Read' daily briefing using the following structure:
+The Hook/TL;DR: Start with a one-sentence summary of the main topic.
+The Core Insight: Provide one punchy, high-level takeaway that explains the 'why' or 'so what.'
+Key Takeaways (List): Provide 3-5 numbered bullet points. Each point should be concise (1-2 sentences) and focus on actionable insights, specific tools mentioned, or clear shifts in strategy.
+Actionable Workflows: If the source material describes a specific process or tool setup, summarize it in a 1-2 sentence 'How-To' format. (If there are no workflows, omit this section).
+Closing Thought: One sentence summarizing the broader implication of this content for a professional or builder.
+
+Tone & Style Guidelines:
+Maintain an expert, direct, and efficient voice.
+Prioritize clarity over fluff; remove all marketing preamble.
+If technical terms are used, ensure they are contextualized simply.
+Do not include links, ads, or promotional content.`;
+
+      const apiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: `Please summarize this article:\n\n${contentToSummarize}` }
+          ],
+          temperature: 0.3
+        })
+      });
+
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        const llmSummary = apiData.choices?.[0]?.message?.content;
+        if (llmSummary) {
+          article.summary = llmSummary.trim();
+          
+          const hookMatch = article.summary.match(/The Hook\/TL;DR:\s*(.*)/i);
+          article.conciseSummary = hookMatch ? hookMatch[1].trim() : sentenceTrim(splitSentences(article.summary).slice(0, 2).join(" "), 280);
+          
+          const coreInsightMatch = article.summary.match(/The Core Insight:\s*(.*)/i);
+          article.whyItMatters = coreInsightMatch ? coreInsightMatch[1].trim() : buildWhyItMatters(article, source);
+          article.conciseWhyRelevant = buildConciseWhyRelevant(article, source);
+          article.topicAngle = buildTopicAngle(article, source);
+          article.relevance = source.relevance || article.relevance || ["Strategy"];
+          article.suggestedUse = buildSuggestedUse(source);
+          article.priority = source.priority || article.priority || "medium";
+          return;
+        }
+      } else {
+        console.error(`OpenAI API failed: HTTP ${apiRes.status}`);
+      }
+    } catch (err) {
+      console.error("OpenAI summarization failed, using local fallback:", err.message);
+    }
+  }
+
+  article.summary = finalFallback;
   article.conciseSummary = sentenceTrim(splitSentences(article.summary).slice(0, 2).join(" "), 280);
   article.whyItMatters = buildWhyItMatters(article, source);
   article.conciseWhyRelevant = buildConciseWhyRelevant(article, source);
