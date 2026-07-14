@@ -765,7 +765,8 @@ export async function refresh(dryRun = false) {
   const feed = await readJson(FEED_PATH, { today: {}, archive: [] });
   
   const scanTime = new Date().toISOString();
-  const date = new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   
   releaseScheduledArticles(ledger, registry, date);
   
