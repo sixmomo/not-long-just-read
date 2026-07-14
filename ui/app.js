@@ -246,7 +246,7 @@ const workspaceConfig = {
   home: {
     label: "Ops Home",
     note: "",
-    routes: ["landing", "topics", "articles", "posts", "nljr", "nljr-day", "daily-archives", "page-styles", "strategy", "post"],
+    routes: ["topics", "articles", "posts", "page-styles", "strategy", "post"],
   },
   xhs: {
     label: "XHS Ops",
@@ -1092,7 +1092,7 @@ function routeHash(workspace = state.workspace, route = state.route, postId = st
 
 function parseRouteHash(hashValue) {
   const raw = String(hashValue || "").replace(/^#/, "");
-  if (!raw) return { workspace: "home", route: "landing" };
+  if (!raw) return { workspace: "home", route: "topics" };
   if (raw.includes("/")) {
     const [first, second, postId = ""] = raw.split("/");
     // Legacy format: #home/route or #workspace/route
@@ -1111,8 +1111,8 @@ function parseRouteHash(hashValue) {
   if (workspaceConfig.xhs.routes.includes(raw)) {
     return { workspace: "xhs", route: raw };
   }
-  if (raw === "home") return { workspace: "home", route: "landing" };
-  return { workspace: "home", route: "landing" };
+  if (raw === "home" || raw === "landing") return { workspace: "home", route: "topics" };
+  return { workspace: "home", route: "topics" };
 }
 
 function pageTitle(route) {
@@ -1138,22 +1138,11 @@ function updatePrimaryNav() {
   primary.innerHTML = `
     <div class="nav-group" aria-label="Primary pages">
       <div class="nav-group-links unified-nav-links" style="display: flex; gap: 20px; align-items: center;">
-        <a class="nav-item" href="./index.html" data-workspace="home" data-route="landing">Home</a>
-        
-        <div class="nav-dropdown">
-          <button class="nav-dropdown-btn" type="button">
-            Social Media Ops <span style="font-size: 8px; margin-left: 2px;">▼</span>
-          </button>
-          <div class="nav-dropdown-content">
-            <a class="nav-item" href="#topics" data-workspace="home" data-route="topics">Topics</a>
-            <a class="nav-item" href="#articles" data-workspace="home" data-route="articles">Drafts</a>
-            <a class="nav-item" href="#posts" data-workspace="home" data-route="posts">Posts</a>
-            <a class="nav-item" href="#page-styles" data-workspace="home" data-route="page-styles">Image Style</a>
-            <a class="nav-item" href="#strategy" data-workspace="home" data-route="strategy">Strategy</a>
-          </div>
-        </div>
-
-        <a class="nav-item" href="#nljr" data-workspace="home" data-route="nljr">NLJR Console</a>
+        <a class="nav-item" href="#topics" data-workspace="home" data-route="topics">Topics</a>
+        <a class="nav-item" href="#articles" data-workspace="home" data-route="articles">Drafts</a>
+        <a class="nav-item" href="#posts" data-workspace="home" data-route="posts">Posts</a>
+        <a class="nav-item" href="#page-styles" data-workspace="home" data-route="page-styles">Image Style</a>
+        <a class="nav-item" href="#strategy" data-workspace="home" data-route="strategy">Strategy</a>
       </div>
     </div>
   `;

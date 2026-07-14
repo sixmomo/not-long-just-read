@@ -59,10 +59,16 @@ function send(res, status, body, type = "application/json; charset=utf-8") {
 
 function safeJoin(...parts) {
   const resolved = path.resolve(rootDir, ...parts);
-  if (!resolved.startsWith(rootDir)) {
-    throw new Error("Path escapes project root");
+  if (resolved.startsWith(rootDir)) {
+    return resolved;
   }
-  return resolved;
+  if (NLJR_DATA_DIR) {
+    const dataDirResolved = path.resolve(NLJR_DATA_DIR);
+    if (resolved.startsWith(dataDirResolved)) {
+      return resolved;
+    }
+  }
+  throw new Error("Path escapes project root");
 }
 
 async function readJson(relativePath) {
@@ -506,6 +512,179 @@ async function archiveSourceRegistrySource(body) {
   const { sourceId } = body;
   if (!sourceId) return { ok: false, error: "sourceId is required" };
   return updateSourceRegistrySource({ sourceId, updates: { status: "archived" } });
+}
+
+async function autoDiscoverSource(body) {
+  let { name, url: inputUrl } = body;
+  inputUrl = (inputUrl || "").trim();
+  if (!inputUrl) {
+    throw new Error("URL is required");
+  }
+
+  if (!/^https?:\/\//i.test(inputUrl)) {
+    inputUrl = "https://" + inputUrl;
+  }
+
+  let feedUrl = "";
+  let scrapedName = "";
+  let scrapedDescription = "";
+
+  const parsedUrl = new URL(inputUrl);
+  const isYoutube = parsedUrl.host.includes("youtube.com") || parsedUrl.host.includes("youtu.be");
+
+  if (isYoutube) {
+    let channelId = "";
+    try {
+      const res = await fetch(inputUrl, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+      });
+      if (res.ok) {
+        const html = await res.text();
+        const metaMatch = html.match(/youtube\.com\/channel\/(UC[a-zA-Z0-9_-]{22})/i) ||
+                         html.match(/<meta\s+itemprop="identifier"\s+content="(UC[a-zA-Z0-9_-]{22})"/i) ||
+                         html.match(/<meta\s+itemprop="channelId"\s+content="([^"]+)"/i) ||
+                         html.match(/"channelId"\s*:\s*"([^"]+)"/);
+        if (metaMatch) {
+          channelId = metaMatch[1];
+        }
+        const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+        if (titleMatch) {
+          scrapedName = titleMatch[1].replace(" - YouTube", "").trim();
+        }
+        const descMatch = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i) ||
+                           html.match(/<meta\s+property="og:description"\s+content="([^"]+)"/i);
+        if (descMatch) {
+          scrapedDescription = descMatch[1];
+        }
+      }
+    } catch (e) {
+      console.error("YouTube auto-discover fetch failed:", e.message);
+    }
+
+    if (channelId) {
+      feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+    } else {
+      const params = new URLSearchParams(parsedUrl.search);
+      const queryId = params.get("channel_id");
+      if (queryId) {
+        feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${queryId}`;
+      }
+    }
+  } else {
+    try {
+      const res = await fetch(inputUrl, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
+      });
+      if (res.ok) {
+        const html = await res.text();
+        const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+        if (titleMatch) {
+          scrapedName = titleMatch[1].replace(/ - Substack| \| Substack/i, "").trim();
+        }
+        const descMatch = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i) ||
+                           html.match(/<meta\s+property="og:description"\s+content="([^"]+)"/i);
+        if (descMatch) {
+          scrapedDescription = descMatch[1];
+        }
+
+        const rssLinkMatch = html.match(/<link[^>]+type=["']application\/(rss\+xml|atom\+xml)["'][^>]*>/i);
+        if (rssLinkMatch) {
+          const hrefMatch = rssLinkMatch[0].match(/href=["']([^"']+)["']/i);
+          if (hrefMatch) {
+            let href = hrefMatch[1];
+            if (href.startsWith("/")) {
+              feedUrl = `${parsedUrl.protocol}//${parsedUrl.host}${href}`;
+            } else if (!/^https?:\/\//i.test(href)) {
+              feedUrl = new URL(href, inputUrl).toString();
+            } else {
+              feedUrl = href;
+            }
+          }
+        }
+
+        if (!feedUrl) {
+          if (inputUrl.includes("substack.com")) {
+            feedUrl = `${parsedUrl.protocol}//${parsedUrl.host}/feed`;
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Standard site auto-discover fetch failed:", e.message);
+    }
+  }
+
+  const finalName = (name || scrapedName || parsedUrl.host || "New Subscription").trim();
+  const id = `subscription-${slugify(finalName)}-${Date.now()}`;
+  
+  // Smart Type Classification
+  let type = "website";
+  const urlLower = inputUrl.toLowerCase();
+  const titleLower = finalName.toLowerCase();
+  const descLower = scrapedDescription.toLowerCase();
+
+  if (isYoutube) {
+    type = "youtube";
+  } else if (urlLower.includes("/podcast") || urlLower.includes("/podcasts") || descLower.includes("podcast") || titleLower.includes("podcast")) {
+    type = "podcast";
+  } else if (urlLower.includes("substack.com") || urlLower.includes("newsletter") || descLower.includes("newsletter") || titleLower.includes("newsletter")) {
+    type = "newsletter";
+  } else if (urlLower.includes("/blog") || urlLower.includes("blog.") || descLower.includes("blog") || titleLower.includes("blog")) {
+    type = "blog";
+  }
+
+  // Smart Tag Suggestions
+  const tags = [];
+  const textToScan = `${titleLower} ${descLower} ${urlLower}`;
+  
+  if (/\b(ai|llm|gpt|claude|openai|lats|deepseek|machine learning|artificial intelligence)\b/i.test(textToScan)) {
+    tags.push("ai");
+  }
+  if (/\b(product|pm|product management|roadmap|spec)\b/i.test(textToScan)) {
+    tags.push("product");
+  }
+  if (/\b(growth|marketing|viral|acquisition|seo|metrics)\b/i.test(textToScan)) {
+    tags.push("growth");
+  }
+  if (/\b(startup|startups|venture|founder|funding|vc)\b/i.test(textToScan)) {
+    tags.push("startups");
+  }
+  if (/\b(engineering|developer|software|code|coder|tech|coding)\b/i.test(textToScan)) {
+    tags.push("engineering");
+  }
+  if (/\b(design|ux|ui|user experience|interface)\b/i.test(textToScan)) {
+    tags.push("design");
+  }
+  if (/\b(career|job|hiring|interview|resume)\b/i.test(textToScan)) {
+    tags.push("career");
+  }
+
+  const newSource = {
+    id,
+    name: finalName,
+    sourceMode: "subscription",
+    type: type,
+    status: "active",
+    scanStatus: "never_checked",
+    lastError: "",
+    priority: "medium",
+    relevance: ["Strategy"],
+    tags: tags,
+    notes: scrapedDescription || "",
+    url: inputUrl,
+    feedUrl: feedUrl,
+    lastCheckedAt: "",
+    lastItemSeen: ""
+  };
+
+  const registry = await readSourceRegistry();
+  registry.sources = [newSource, ...registry.sources.filter(s => s.id !== newSource.id)];
+  await saveSourceRegistry(registry);
+
+  return { ok: true, source: newSource, data: registry };
 }
 
 function normalizeNLJRFeed(data = {}) {
@@ -1520,6 +1699,9 @@ async function handleApi(req, res, url) {
     if (req.method === "POST" && url.pathname === "/api/linkedin/topics/platform") {
       return send(res, 200, await updateLinkedInTopicPlatform(await readRequestJson(req)));
     }
+    if (req.method === "POST" && url.pathname === "/api/source-registry/autodiscover") {
+      return send(res, 200, await autoDiscoverSource(await readRequestJson(req)));
+    }
     if (req.method === "POST" && url.pathname === "/api/source-registry/source") {
       return send(res, 200, await addSourceRegistrySource(await readRequestJson(req)));
     }
@@ -1565,6 +1747,10 @@ async function serveStatic(req, res, url) {
   let requested;
 
   if (pathname === "/" || pathname === "/index.html") {
+    res.writeHead(302, { Location: "/xhs" });
+    res.end();
+    return;
+  } else if (pathname === "/xhs") {
     pathname = "/ui/index.html";
   } else if (pathname === "/NLJR" || pathname === "/nljr") {
     pathname = "/ui/nljr.html";

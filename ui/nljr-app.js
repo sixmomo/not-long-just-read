@@ -10,7 +10,7 @@ const state = {
   nljrArchiveErrors: {},
   sourceEditingId: null,
   showAllSubscriptions: false,
-  showAllAdhocs: false,
+  showAllRandomTopics: false,
   showAllArticleLedger: false,
 };
 
@@ -423,7 +423,7 @@ function selectOptions(options, selected) {
 
 function pageTitle(route) {
   const titles = {
-    daily: "Today's NLJR",
+    daily: "Daily NL;JR",
     console: "NLJR Console",
     archives: "NLJR Archives",
   };
@@ -521,12 +521,12 @@ function consoleOverviewPanel() {
       <div class="panel-header">
         <div>
           <p class="eyebrow">Overview</p>
-          <p>Manage keyword watches, subscriptions, and adhoc inputs that will power the Not Long; Just Read feed.</p>
+          <p>Manage subscriptions and random topics that will power the Not Long; Just Read feed.</p>
         </div>
         <span class="pill">${activeSources.length} active sources</span>
       </div>
       ${state.actionMessage ? `<p class="action-message">${escapeHtml(state.actionMessage)}</p>` : ""}
-      <div class="metrics-grid home-metrics nljr-health-grid" style="margin-top: 20px;">
+      <div class="metrics-grid nljr-health-grid" style="margin-top: 20px;">
         ${metricCard("Active sources", String(health.activeSources ?? activeSourceCount()), "Sources currently eligible for NLJR generation.")}
         ${metricCard("Active subscriptions", String(health.activeSubscriptions ?? activeSubscriptionCount()), "Subscriptions checked for newly published posts.")}
         ${metricCard("Need URL confirmation", String(health.needsUrlConfirmation ?? needsUrlConfirmationCount()), "Sources saved but not yet ready for automated scanning.")}
@@ -540,7 +540,7 @@ function sourceModeDescription(mode) {
   const descriptions = {
     keyword_watch: "Recurring research prompts across selected platforms and languages.",
     subscription: "Stable feeds like podcasts, newsletters, YouTube channels, RSS feeds, and blogs.",
-    manual_inbox: "Adhoc links, screenshots, and notes you send in chat or save into a local folder.",
+    manual_inbox: "One-off links, screenshots, and notes you send in chat or save into a local folder.",
   };
   return descriptions[mode] || "";
 }
@@ -709,7 +709,7 @@ function sourceModePanel(title, mode) {
   let displaySources = sources;
   if (mode === "subscription" && !state.showAllSubscriptions) {
     displaySources = sources.slice(0, 5);
-  } else if (mode === "manual_inbox" && !state.showAllAdhocs) {
+  } else if (mode === "manual_inbox" && !state.showAllRandomTopics) {
     displaySources = sources.slice(0, 5);
   }
 
@@ -727,8 +727,8 @@ function sourceModePanel(title, mode) {
             </button>
           ` : ""}
           ${(mode === "manual_inbox" && sources.length > 5) ? `
-            <button class="ghost-button compact-action" id="toggle-all-adhocs-button" type="button">
-              ${state.showAllAdhocs ? "Show Less" : "View All"}
+            <button class="ghost-button compact-action" id="toggle-all-random-topics-button" type="button">
+              ${state.showAllRandomTopics ? "Show Less" : "View All"}
             </button>
           ` : ""}
           <button class="ghost-button compact-action" type="button" data-add-source-mode="${escapeHtml(mode)}">Add</button>
@@ -756,9 +756,8 @@ function sourceManagementView() {
   return `
     ${consoleOverviewPanel()}
     <div class="source-panel-stack">
-      ${sourceModePanel("Keyword Watches", "keyword_watch")}
       ${sourceModePanel("Subscriptions", "subscription")}
-      ${sourceModePanel("Adhocs", "manual_inbox")}
+      ${sourceModePanel("Random Topics", "manual_inbox")}
     </div>
     ${nljrArticleLedgerView()}
   `;
@@ -814,7 +813,7 @@ function dailyArchivesView() {
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
           <span class="pill">${entries.length} entries</span>
-          <a class="ghost-button compact-action" href="#daily" data-route="daily">Today's NLJR</a>
+          <a class="ghost-button compact-action" href="#daily" data-route="daily">Daily NL;JR</a>
         </div>
       </div>
       ${
@@ -848,8 +847,8 @@ function nljrTodayView() {
       <div class="panel-header">
         <div>
           <p class="eyebrow">Today</p>
-          <h3>Today’s NLJR</h3>
-          <p>Not Long; Just Read. Top signals generated from active sources, subscriptions, and adhocs.</p>
+          <h3>Daily NL;JR</h3>
+          <p>Not Long; Just Read. Top signals generated from active sources, subscriptions, and random topics.</p>
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
           <span class="pill">${escapeHtml(today.date || "Not generated")}</span>
@@ -1020,7 +1019,6 @@ function nljrDayView() {
           : '<div class="empty-state">No additional qualifying feeds today.</div>'
       }
     </section>
-    ${nljrArchiveSummaryView({ limit: 5 })}
   `;
 }
 
@@ -1118,6 +1116,15 @@ function render() {
     view.innerHTML = dailyArchivesView();
   }
 
+  let modalWrapper = document.querySelector("#modal-wrapper");
+  if (!modalWrapper) {
+    modalWrapper = document.createElement("div");
+    modalWrapper.id = "modal-wrapper";
+    document.body.appendChild(modalWrapper);
+  }
+  modalWrapper.innerHTML = modalView();
+  bindModalEvents();
+
   bindNavigation();
 }
 
@@ -1172,7 +1179,13 @@ function bindSourceManagementEvents() {
   });
   document.querySelectorAll("[data-add-source-mode]").forEach((button) => {
     button.addEventListener("click", async () => {
-      await addSourceRegistrySource(button.dataset.addSourceMode);
+      const mode = button.dataset.addSourceMode;
+      if (mode === "subscription") {
+        state.modal = { type: "add-subscription", name: "", url: "", error: "", saving: false };
+        render();
+      } else {
+        await addSourceRegistrySource(mode);
+      }
     });
   });
   document.querySelectorAll("[data-edit-source]").forEach((button) => {
@@ -1203,10 +1216,10 @@ function bindSourceManagementEvents() {
     });
   }
 
-  const toggleAdhocBtn = document.querySelector("#toggle-all-adhocs-button");
-  if (toggleAdhocBtn) {
-    toggleAdhocBtn.addEventListener("click", () => {
-      state.showAllAdhocs = !state.showAllAdhocs;
+  const toggleRandomTopicsBtn = document.querySelector("#toggle-all-random-topics-button");
+  if (toggleRandomTopicsBtn) {
+    toggleRandomTopicsBtn.addEventListener("click", () => {
+      state.showAllRandomTopics = !state.showAllRandomTopics;
       render();
     });
   }
@@ -1369,7 +1382,12 @@ document.addEventListener("click", (event) => {
 
   const addMode = target.dataset.addSourceMode;
   if (addMode) {
-    void addSourceRegistrySource(addMode);
+    if (addMode === "subscription") {
+      state.modal = { type: "add-subscription", name: "", url: "", error: "", saving: false };
+      render();
+    } else {
+      void addSourceRegistrySource(addMode);
+    }
   }
 
   const editId = target.dataset.editSource;
@@ -1403,3 +1421,101 @@ const { route, postId } = parseRouteHash(window.location.hash);
 state.route = route;
 state.postPageId = postId;
 void loadRealData();
+
+function modalView() {
+  if (!state.modal) return "";
+  if (state.modal.type === "add-subscription") {
+    return addSubscriptionModalView();
+  }
+  return "";
+}
+
+function addSubscriptionModalView() {
+  const { name, url, error, saving } = state.modal;
+  return `
+    <div class="modal-backdrop" role="presentation" id="modal-backdrop">
+      <section class="modal-panel" role="dialog" aria-modal="true" aria-label="Add Subscription">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Autodiscover</p>
+            <h3>Add New Subscription</h3>
+          </div>
+          <button class="ghost-button compact-action" type="button" id="modal-close-button">×</button>
+        </div>
+        <div class="modal-body" style="padding-top: 10px;">
+          <form id="add-subscription-form" style="display: grid; gap: 14px;">
+            ${error ? `<p class="action-message danger-action" style="margin: 0; padding: 10px; border-radius: 6px; background: #fff1f0; border: 1px solid #ffa39e; color: var(--danger); font-size: 13px;">${escapeHtml(error)}</p>` : ""}
+            <label style="display: grid; gap: 6px;">
+              <span class="nav-group-label" style="font-size: 11px;">Source Name (Optional)</span>
+              <input class="source-input" id="modal-source-name" type="text" placeholder="e.g. Lenny's Newsletter (autofilled if blank)" value="${escapeHtml(name)}" ${saving ? "disabled" : ""} />
+            </label>
+            <label style="display: grid; gap: 6px;">
+              <span class="nav-group-label" style="font-size: 11px;">Website or YouTube URL</span>
+              <input class="source-input" id="modal-source-url" type="url" required placeholder="e.g. https://www.youtube.com/@PeterYangYT" value="${escapeHtml(url)}" ${saving ? "disabled" : ""} />
+            </label>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+              <button class="ghost-button" type="button" id="modal-cancel-button" ${saving ? "disabled" : ""}>Cancel</button>
+              <button class="primary-button" type="submit" id="modal-submit-button" ${saving ? "disabled" : ""}>
+                ${saving ? "Autodiscovering..." : "Add Subscription"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+function bindModalEvents() {
+  if (!state.modal) return;
+
+  const closeBtn = document.querySelector("#modal-close-button");
+  const cancelBtn = document.querySelector("#modal-cancel-button");
+  const backdrop = document.querySelector("#modal-backdrop");
+  const form = document.querySelector("#add-subscription-form");
+
+  const closeHandler = () => {
+    state.modal = null;
+    render();
+  };
+
+  if (closeBtn) closeBtn.addEventListener("click", closeHandler);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeHandler);
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) closeHandler();
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nameInput = document.querySelector("#modal-source-name");
+      const urlInput = document.querySelector("#modal-source-url");
+      if (!urlInput || !urlInput.value.trim()) return;
+
+      state.modal.name = nameInput ? nameInput.value : "";
+      state.modal.url = urlInput.value;
+      state.modal.saving = true;
+      state.modal.error = "";
+      render();
+
+      try {
+        const result = await apiRequest("/api/source-registry/autodiscover", {
+          method: "POST",
+          body: JSON.stringify({
+            name: state.modal.name,
+            url: state.modal.url
+          })
+        });
+        sourceRegistry = result.data || sourceRegistry;
+        state.actionMessage = `Successfully added: ${result.source.name}`;
+        state.modal = null;
+      } catch (err) {
+        state.modal.saving = false;
+        state.modal.error = err.message || "Failed to autodiscover subscription feed.";
+      }
+      render();
+    });
+  }
+}
