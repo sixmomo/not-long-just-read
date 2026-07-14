@@ -423,7 +423,7 @@ function selectOptions(options, selected) {
 
 function pageTitle(route) {
   const titles = {
-    daily: "Today's NLJR",
+    daily: "Daily NL;JR",
     console: "NLJR Console",
     archives: "NLJR Archives",
   };
@@ -813,7 +813,7 @@ function dailyArchivesView() {
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
           <span class="pill">${entries.length} entries</span>
-          <a class="ghost-button compact-action" href="#daily" data-route="daily">Today's NLJR</a>
+          <a class="ghost-button compact-action" href="#daily" data-route="daily">Daily NL;JR</a>
         </div>
       </div>
       ${
@@ -847,7 +847,7 @@ function nljrTodayView() {
       <div class="panel-header">
         <div>
           <p class="eyebrow">Today</p>
-          <h3>Today’s NLJR</h3>
+          <h3>Daily NL;JR</h3>
           <p>Not Long; Just Read. Top signals generated from active sources, subscriptions, and random topics.</p>
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
@@ -1019,7 +1019,6 @@ function nljrDayView() {
           : '<div class="empty-state">No additional qualifying feeds today.</div>'
       }
     </section>
-    ${nljrArchiveSummaryView({ limit: 5 })}
   `;
 }
 
