@@ -10,7 +10,7 @@ const state = {
   nljrArchiveErrors: {},
   sourceEditingId: null,
   showAllSubscriptions: false,
-  showAllAdhocs: false,
+  showAllRandomTopics: false,
   showAllArticleLedger: false,
 };
 
@@ -521,7 +521,7 @@ function consoleOverviewPanel() {
       <div class="panel-header">
         <div>
           <p class="eyebrow">Overview</p>
-          <p>Manage keyword watches, subscriptions, and adhoc inputs that will power the Not Long; Just Read feed.</p>
+          <p>Manage subscriptions and random topics that will power the Not Long; Just Read feed.</p>
         </div>
         <span class="pill">${activeSources.length} active sources</span>
       </div>
@@ -540,7 +540,7 @@ function sourceModeDescription(mode) {
   const descriptions = {
     keyword_watch: "Recurring research prompts across selected platforms and languages.",
     subscription: "Stable feeds like podcasts, newsletters, YouTube channels, RSS feeds, and blogs.",
-    manual_inbox: "Adhoc links, screenshots, and notes you send in chat or save into a local folder.",
+    manual_inbox: "One-off links, screenshots, and notes you send in chat or save into a local folder.",
   };
   return descriptions[mode] || "";
 }
@@ -709,7 +709,7 @@ function sourceModePanel(title, mode) {
   let displaySources = sources;
   if (mode === "subscription" && !state.showAllSubscriptions) {
     displaySources = sources.slice(0, 5);
-  } else if (mode === "manual_inbox" && !state.showAllAdhocs) {
+  } else if (mode === "manual_inbox" && !state.showAllRandomTopics) {
     displaySources = sources.slice(0, 5);
   }
 
@@ -727,8 +727,8 @@ function sourceModePanel(title, mode) {
             </button>
           ` : ""}
           ${(mode === "manual_inbox" && sources.length > 5) ? `
-            <button class="ghost-button compact-action" id="toggle-all-adhocs-button" type="button">
-              ${state.showAllAdhocs ? "Show Less" : "View All"}
+            <button class="ghost-button compact-action" id="toggle-all-random-topics-button" type="button">
+              ${state.showAllRandomTopics ? "Show Less" : "View All"}
             </button>
           ` : ""}
           <button class="ghost-button compact-action" type="button" data-add-source-mode="${escapeHtml(mode)}">Add</button>
@@ -757,8 +757,7 @@ function sourceManagementView() {
     ${consoleOverviewPanel()}
     <div class="source-panel-stack">
       ${sourceModePanel("Subscriptions", "subscription")}
-      ${sourceModePanel("Adhocs", "manual_inbox")}
-      ${sourceModePanel("Keyword Watches", "keyword_watch")}
+      ${sourceModePanel("Random Topics", "manual_inbox")}
     </div>
     ${nljrArticleLedgerView()}
   `;
@@ -849,7 +848,7 @@ function nljrTodayView() {
         <div>
           <p class="eyebrow">Today</p>
           <h3>Today’s NLJR</h3>
-          <p>Not Long; Just Read. Top signals generated from active sources, subscriptions, and adhocs.</p>
+          <p>Not Long; Just Read. Top signals generated from active sources, subscriptions, and random topics.</p>
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
           <span class="pill">${escapeHtml(today.date || "Not generated")}</span>
@@ -1218,10 +1217,10 @@ function bindSourceManagementEvents() {
     });
   }
 
-  const toggleAdhocBtn = document.querySelector("#toggle-all-adhocs-button");
-  if (toggleAdhocBtn) {
-    toggleAdhocBtn.addEventListener("click", () => {
-      state.showAllAdhocs = !state.showAllAdhocs;
+  const toggleRandomTopicsBtn = document.querySelector("#toggle-all-random-topics-button");
+  if (toggleRandomTopicsBtn) {
+    toggleRandomTopicsBtn.addEventListener("click", () => {
+      state.showAllRandomTopics = !state.showAllRandomTopics;
       render();
     });
   }
