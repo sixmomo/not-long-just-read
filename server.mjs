@@ -1,3 +1,4 @@
+import "./load_env.mjs";
 import { createServer } from "node:http";
 import http from "node:http";
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
@@ -9,23 +10,6 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = __dirname;
 import { refresh as refreshNljr } from "./not-long-just-read/scripts/refresh_nljr.js";
-// Load dotenv values if file exists
-try {
-  const envContent = await readFile(path.join(rootDir, ".env"), "utf8");
-  for (const line of envContent.split("\n")) {
-    const match = line.match(/^\s*([\w\.\-]+)\s*=\s*(.*)?\s*$/);
-    if (match) {
-      const key = match[1];
-      let value = (match[2] || "").trim();
-      if (value.startsWith('"') && value.endsWith('"')) {
-        value = value.substring(1, value.length - 1);
-      }
-      process.env[key] = value;
-    }
-  }
-} catch (e) {
-  // Ignore missing .env
-}
 
 const NLJR_ROOT = process.env.NLJR_ROOT || "./not-long-just-read";
 const NLJR_DATA_DIR = process.env.OPS_DATA_DIR || path.join(NLJR_ROOT, "data");
