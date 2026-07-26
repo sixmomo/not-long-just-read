@@ -9,16 +9,16 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = __dirname;
-import { refresh as refreshNljr } from "./not-long-just-read/scripts/refresh_nljr.js";
+import { refresh as refreshNljr } from "./scripts/refresh_nljr.js";
 
-const NLJR_ROOT = process.env.NLJR_ROOT || "./not-long-just-read";
+const NLJR_ROOT = process.env.NLJR_ROOT || ".";
 const NLJR_DATA_DIR = process.env.OPS_DATA_DIR || path.join(NLJR_ROOT, "data");
 const NLJR_REGISTRY_PATH = path.join(NLJR_DATA_DIR, "source-registry.json");
 const NLJR_LEDGER_PATH = path.join(NLJR_DATA_DIR, "nljr-article-ledger.json");
 const NLJR_FEED_PATH = path.join(NLJR_DATA_DIR, "nljr-feed.json");
 const NLJR_ARCHIVE_DIR = path.join(NLJR_DATA_DIR, "content_pipeline", "nljr_archive");
 const NLJR_MD_PATH = path.join(NLJR_DATA_DIR, "NLJR.md");
-const port = Number(process.env.PORT || 5177);
+const port = Number(process.env.PORT || 8765);
 const host = process.env.HOST || "0.0.0.0";
 const lanHost = process.env.LAN_HOST || getLanHost() || "your-lan-ip";
 const imageModel = process.env.OPENAI_IMAGE_MODEL || "gpt-image-2";
@@ -733,19 +733,30 @@ function nljrItemFromArticle(article, source, date, index) {
   };
 }
 
+function trimToWordLimit(str, limit) {
+  if (!str) return "";
+  const cleaned = str.replace(/The Hook\/TL;DR:\s*/i, "").trim();
+  const words = cleaned.split(/\s+/);
+  if (words.length <= limit) return cleaned;
+  return words.slice(0, limit).join(" ") + "...";
+}
+
 function buildNLJRMarkdown(todayFeed) {
   const items = todayFeed.items || [];
   const recommendedIds = new Set(todayFeed.recommendedItemIds || []);
   const recommended = items.filter((item, index) =>
     recommendedIds.size ? recommendedIds.has(item.articleId || item.id) : index < 3,
   );
-  const additional = items.filter(
-    (item) => !recommended.some((recommendedItem) => recommendedItem.id === item.id),
-  );
   const health = todayFeed.sourceHealth || {};
+  const summaryContent = todayFeed.executiveSummary || todayFeed.dailySummary || "*No daily summary generated yet. Ask Antigravity to compile the executive summary.*";
+
   return `# NLJR Daily Feed - ${todayFeed.date}
 
 Generated at: ${todayFeed.generatedAt}
+
+## 24-Hour Executive Summary
+
+${summaryContent}
 
 ## Recommended Deep Reads
 
@@ -775,21 +786,13 @@ ${item.topicAngle}
   )
   .join("\n")}
 
-## More New Feeds
+## All Scanned Articles
 
-${additional
+${items
   .map(
-    (item, index) => `### ${index + 4}. ${item.title}
-
-Source: ${item.sourceName}
-URL: ${item.url || "N/A"}
-
-${item.conciseSummary || item.summary}
-
-Why read: ${item.conciseWhyRelevant || item.whyItMatters}
-`,
+    (item) => `- [${item.title}](${item.url || "#"}) - ${trimToWordLimit(item.conciseSummary || item.summary, 30)}`
   )
-  .join("\n") || "No additional qualifying feeds."}
+  .join("\n") || "No feeds scanned today."}
 
 ## Source Health
 
@@ -844,6 +847,7 @@ async function generateNLJRFeed() {
     generatedAt,
     items,
     recommendedItemIds: items.slice(0, 3).map((item) => item.articleId || item.id),
+    executiveSummary: "",
     sourceHealth: {
       activeSources: activeSources.length,
       activeSubscriptions: subscriptions.length,
@@ -1790,6 +1794,6 @@ createServer(async (req, res) => {
     send(res, 500, error.message, "text/plain; charset=utf-8");
   });
 }).listen(port, host, () => {
-  console.log(`XHS Ops server running locally at http://127.0.0.1:${port}/ui/index.html`);
+  console.log(`NLJR Standalone server running locally at http://127.0.0.1:${port}/ui/index.html`);
   console.log(`LAN access URL: http://${lanHost}:${port}/ui/index.html`);
 });

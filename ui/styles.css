@@ -551,6 +551,13 @@ select {
   overflow-wrap: anywhere;
 }
 
+.panel-header p.nljr-exec-summary {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  max-width: 720px;
+}
+
 .two-column {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);

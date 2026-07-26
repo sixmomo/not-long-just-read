@@ -17,7 +17,9 @@ try {
       if (value.startsWith('"') && value.endsWith('"')) {
         value = value.substring(1, value.length - 1);
       }
-      process.env[key] = value;
+      if (process.env[key] === undefined) {
+        process.env[key] = value;
+      }
     }
   }
 } catch (e) {
@@ -658,105 +660,80 @@ function buildFeedItem(article, date, index) {
   };
 }
 
+function trimToWordLimit(str, limit) {
+  if (!str) return "";
+  const cleaned = str.replace(/The Hook\/TL;DR:\s*/i, "").trim();
+  const words = cleaned.split(/\s+/);
+  if (words.length <= limit) return cleaned;
+  return words.slice(0, limit).join(" ") + "...";
+}
+
 function buildArchiveMarkdown(todayFeed) {
   const items = todayFeed.items || [];
   const recommendedIds = new Set(todayFeed.recommendedItemIds || []);
-  
   const recommended = items.filter((item, index) =>
-    recommendedIds.size ? recommendedIds.has(item.articleId || item.id) : index < RECOMMENDED_LIMIT
+    recommendedIds.size ? recommendedIds.has(item.articleId || item.id) : index < 3,
   );
-  const recommendedItemIds = new Set(recommended.map(item => item.id));
-  const additional = items.filter(item => !recommendedItemIds.has(item.id));
-  
-  const lines = [
-    `# NLJR Daily Feed - ${todayFeed.date}`,
-    "",
-    `Generated at: ${todayFeed.generatedAt}`,
-    "",
-    "## Recommended Deep Reads",
-    ""
-  ];
-
-  if (recommended.length === 0) {
-    lines.push("No new qualifying posts were found.", "");
-  }
-
-  recommended.forEach((item, index) => {
-    lines.push(
-      `### ${index + 1}. ${item.title}`,
-      "",
-      `Source: ${item.sourceName}`,
-      `URL: ${item.url}`,
-      `Published: ${item.publishedAt}`,
-      "",
-      "#### Summary",
-      "",
-      item.summary,
-      "",
-      "#### Why It Matters",
-      "",
-      item.whyItMatters,
-      "",
-      "#### Relevance",
-      "",
-      item.relevance.join(", "),
-      "",
-      "#### Suggested Use",
-      "",
-      item.suggestedUse.join(", "),
-      "",
-      "#### Topic Angle",
-      "",
-      item.topicAngle,
-      "",
-      `#### Priority\n\n${item.priority}`,
-      ""
-    );
-  });
-
-  lines.push("## More New Feeds", "");
-  if (additional.length === 0) {
-    lines.push("No additional qualifying feeds.", "");
-  }
-
-  additional.forEach((item, index) => {
-    lines.push(
-      `### ${index + recommended.length + 1}. ${item.title}`,
-      "",
-      `Source: ${item.sourceName}`,
-      `URL: ${item.url}`,
-      `Published: ${item.publishedAt}`,
-      "",
-      item.conciseSummary || item.summary,
-      "",
-      `Why read: ${item.conciseWhyRelevant || item.whyItMatters}`,
-      ""
-    );
-  });
-
   const health = todayFeed.sourceHealth || {};
-  lines.push(
-    "## Source Health",
-    "",
-    `- Active sources: ${health.activeSources || 0}`,
-    `- Active subscriptions: ${health.activeSubscriptions || 0}`,
-    `- Sources checked: ${health.sourcesChecked || 0}`,
-    `- Source errors: ${health.sourceErrors || 0}`,
-    `- Need URL confirmation: ${health.needsUrlConfirmation || 0}`,
-    `- Keyword watches: ${health.keywordWatches || 0}`,
-    `- New articles available: ${health.newArticlesAvailable || 0}`,
-    `- Processed articles: ${health.processedArticles || 0}`,
-    ""
-  );
+  const summaryContent = todayFeed.executiveSummary || todayFeed.dailySummary || "*No daily summary generated yet. Ask Antigravity to compile the executive summary.*";
 
-  if (health.errorSources && health.errorSources.length > 0) {
-    lines.push("## Source Errors", "");
-    health.errorSources.forEach(item => {
-      lines.push(`- ${item.name}: ${item.reason}`);
-    });
-    lines.push("");
-  }
-  return lines.join("\n");
+  return `# NLJR Daily Feed - ${todayFeed.date}
+
+Generated at: ${todayFeed.generatedAt}
+
+## 24-Hour Executive Summary
+
+${summaryContent}
+
+## Recommended Deep Reads
+
+${recommended
+  .map(
+    (item, index) => `### ${index + 1}. ${item.title}
+
+Source: ${item.sourceName}
+URL: ${item.url || "N/A"}
+
+#### Summary
+
+${item.summary}
+
+#### Why It Matters
+
+${item.whyItMatters}
+
+#### Suggested Use
+
+${(item.suggestedUse || []).join(", ")}
+
+#### Topic Angle
+
+${item.topicAngle}
+`,
+  )
+  .join("\n")}
+
+## All Scanned Articles
+
+${items
+  .map(
+    (item) => `- [${item.title}](${item.url || "#"}) - ${trimToWordLimit(item.conciseSummary || item.summary, 30)}`
+  )
+  .join("\n") || "No feeds scanned today."}
+
+## Source Health
+
+- Active sources: ${health.activeSources || 0}
+- Active subscriptions: ${health.activeSubscriptions || 0}
+- Need URL confirmation: ${health.needsUrlConfirmation || 0}
+- Keyword watches: ${health.keywordWatches || 0}
+- New articles available: ${health.newArticlesAvailable || 0}
+- Processed articles: ${health.processedArticles || 0}
+
+## Skipped Sources
+
+${(health.skippedSources || []).map((item) => `- ${item.name}: ${item.reason}`).join("\n") || "- None"}
+`;
 }
 
 export async function refresh(dryRun = false) {

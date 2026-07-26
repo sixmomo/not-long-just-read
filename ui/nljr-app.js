@@ -423,9 +423,10 @@ function selectOptions(options, selected) {
 
 function pageTitle(route) {
   const titles = {
-    daily: "Daily NL;JR",
+    daily: "Daily NLJR",
+    "all-links": "Scanned Feed Links",
     console: "NLJR Console",
-    archives: "NLJR Archives",
+    archives: "Archives",
   };
   return titles[route] || "NLJR";
 }
@@ -437,13 +438,17 @@ function parseRouteHash(hashValue) {
     const parts = raw.split("/");
     return { route: "daily", postId: parts[1] || "" };
   }
+  if (raw.startsWith("all-links/")) {
+    const parts = raw.split("/");
+    return { route: "all-links", postId: parts[1] || "" };
+  }
   if (raw === "console") return { route: "console", postId: "" };
   if (raw === "archives") return { route: "archives", postId: "" };
   return { route: "daily", postId: "" };
 }
 
 function setRoute(nextRoute, options = {}) {
-  const safeRoutes = ["daily", "console", "archives"];
+  const safeRoutes = ["daily", "console", "archives", "all-links"];
   const safeRoute = safeRoutes.includes(nextRoute) ? nextRoute : "daily";
   state.route = safeRoute;
   state.postPageId = options.postId || "";
@@ -451,6 +456,8 @@ function setRoute(nextRoute, options = {}) {
   let expectedHash = `#${safeRoute}`;
   if (safeRoute === "daily" && state.postPageId) {
     expectedHash = `#daily/${state.postPageId}`;
+  } else if (safeRoute === "all-links" && state.postPageId) {
+    expectedHash = `#all-links/${state.postPageId}`;
   }
 
   if (window.location.hash !== expectedHash) {
@@ -980,7 +987,7 @@ function nljrDayView() {
         <div>
           <p class="eyebrow">Daily Edition</p>
           <h3>NLJR · ${escapeHtml(today.date || "Not generated")}</h3>
-          <p>Three deep recommendations followed by a concise scan of the other most relevant new feeds.</p>
+          <p class="nljr-exec-summary">${renderInlineMarkdown(today.executiveSummary || today.dailySummary || "Three deep recommendations followed by a concise scan of the other most relevant new feeds.")}</p>
         </div>
         <div class="panel-action-stack" style="display: flex; gap: 8px; align-items: center;">
           <span class="pill">${items.length} items</span>
@@ -1011,14 +1018,72 @@ function nljrDayView() {
         <div>
           <p class="eyebrow">Quick Scan</p>
           <h3>More New Feeds</h3>
-          <p>Concise summaries of the remaining ranked items, up to ten total for the edition.</p>
+          <p>List of all feeds scanned and processed for today's edition.</p>
         </div>
-        <span class="pill">${additional.length} more</span>
+        <span class="pill">${items.length} items</span>
       </div>
       ${
-        additional.length
-          ? `<div class="nljr-brief-list">${additional.map(nljrBriefItemView).join("")}</div>`
-          : '<div class="empty-state">No additional qualifying feeds today.</div>'
+        items.length
+          ? `
+            <ul class="nljr-scanned-links-list" style="list-style-type: disc; padding-left: 20px; line-height: 1.8; margin-bottom: 16px;">
+              ${items.slice(0, 5).map(item => `
+                <li style="margin-bottom: 8px;">
+                  <a href="${escapeHtml(item.url)}" target="_blank" style="font-weight: 500; text-decoration: underline;">${escapeHtml(item.title)}</a>
+                  <span style="color: var(--muted); margin-left: 6px;">(Source: ${escapeHtml(item.sourceName)})</span>
+                </li>
+              `).join("")}
+            </ul>
+            ${
+              items.length > 5
+                ? `<div style="margin-top: 12px;">
+                    <a class="ghost-button compact-action" href="#all-links/${escapeHtml(today.date)}" data-route="all-links" data-post-id="${escapeHtml(today.date)}">Show all ${items.length} links</a>
+                   </div>`
+                : ""
+            }
+          `
+          : '<div class="empty-state">No scanned feeds today.</div>'
+      }
+    </section>
+  `;
+}
+
+function nljrAllLinksView() {
+  const today = nljrFeed.today || {};
+  const requestedDate = state.postPageId || today.date;
+  const items = (requestedDate === today.date) ? (today.items || []) : [];
+
+  return `
+    <section class="panel nljr-edition-header">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">All Scanned Feeds</p>
+          <h3>NLJR · ${escapeHtml(requestedDate || "Unknown date")}</h3>
+          <p>Complete list of all feeds scanned and analyzed for this edition.</p>
+        </div>
+        <div class="panel-action-stack">
+          <a class="ghost-button compact-action" href="#daily/${escapeHtml(requestedDate)}" data-route="daily" data-post-id="${escapeHtml(requestedDate)}">Back to Daily Edition</a>
+        </div>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h3>All Scanned Articles (${items.length})</h3>
+        </div>
+      </div>
+      ${
+        items.length
+          ? `
+            <ul class="nljr-all-links-list" style="list-style-type: disc; padding-left: 20px; line-height: 1.8;">
+              ${items.map(item => `
+                <li style="margin-bottom: 8px;">
+                  <a href="${escapeHtml(item.url)}" target="_blank" style="font-weight: 500; text-decoration: underline;">${escapeHtml(item.title)}</a>
+                  <span style="color: var(--muted); margin-left: 6px;">(Source: ${escapeHtml(item.sourceName)})</span>
+                </li>
+              `).join("")}
+            </ul>
+          `
+          : '<div class="empty-state">No scanned feed links available for this date.</div>'
       }
     </section>
   `;
@@ -1111,6 +1176,8 @@ function render() {
 
   if (state.route === "daily") {
     view.innerHTML = nljrDayView();
+  } else if (state.route === "all-links") {
+    view.innerHTML = nljrAllLinksView();
   } else if (state.route === "console") {
     view.innerHTML = sourceManagementView();
     bindSourceManagementEvents();
