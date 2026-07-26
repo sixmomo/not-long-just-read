@@ -883,7 +883,7 @@ function nljrItemView(item, index) {
       <div class="strategy-card-header">
         <div>
           <p class="eyebrow">${escapeHtml(item.sourceName || "Source")}</p>
-          <h3>${escapeHtml(item.title || "Untitled signal")}</h3>
+          <h3>${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer" style="text-decoration: underline; color: inherit;">${escapeHtml(item.title || "Untitled signal")}</a>` : escapeHtml(item.title || "Untitled signal")}</h3>
         </div>
         <span class="pill nljr-priority-pill ${item.priority === "high" ? "hot" : ""}">${escapeHtml(item.priority || "medium")}</span>
       </div>
@@ -904,7 +904,6 @@ function nljrItemView(item, index) {
         ${(item.relevance || []).map((label) => `<span class="pill">${escapeHtml(label)}</span>`).join("")}
         ${(item.suggestedUse || []).map((label) => `<span class="pill good">${escapeHtml(label)}</span>`).join("")}
       </div>
-      ${item.url ? `<a class="source-link" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer">Open source</a>` : ""}
     </article>
   `;
 }
@@ -980,7 +979,7 @@ function nljrDayView() {
   const items = today.items || [];
   const recommended = nljrRecommendedItems(today);
   const recommendedIds = new Set(recommended.map((item) => item.articleId || item.id));
-  const additional = items.filter((item) => !recommendedIds.has(item.articleId || item.id)).slice(0, 7);
+  const additional = items.filter((item) => !recommendedIds.has(item.articleId || item.id));
   return `
     <section class="panel nljr-edition-header">
       <div class="panel-header">
@@ -1020,13 +1019,13 @@ function nljrDayView() {
           <h3>More New Feeds</h3>
           <p>List of all feeds scanned and processed for today's edition.</p>
         </div>
-        <span class="pill">${items.length} items</span>
+        <span class="pill">${additional.length} items</span>
       </div>
       ${
-        items.length
+        additional.length
           ? `
             <ul class="nljr-scanned-links-list" style="list-style-type: disc; padding-left: 20px; line-height: 1.8; margin-bottom: 16px;">
-              ${items.slice(0, 5).map(item => `
+              ${additional.slice(0, 5).map(item => `
                 <li style="margin-bottom: 8px;">
                   <a href="${escapeHtml(item.url)}" target="_blank" style="font-weight: 500; text-decoration: underline;">${escapeHtml(item.title)}</a>
                   <span style="color: var(--muted); margin-left: 6px;">(Source: ${escapeHtml(item.sourceName)})</span>
@@ -1034,14 +1033,14 @@ function nljrDayView() {
               `).join("")}
             </ul>
             ${
-              items.length > 5
+              additional.length > 5
                 ? `<div style="margin-top: 12px;">
-                    <a class="ghost-button compact-action" href="#all-links/${escapeHtml(today.date)}" data-route="all-links" data-post-id="${escapeHtml(today.date)}">Show all ${items.length} links</a>
+                    <a class="ghost-button compact-action" href="#all-links/${escapeHtml(today.date)}" data-route="all-links" data-post-id="${escapeHtml(today.date)}">Show all ${additional.length} links</a>
                    </div>`
                 : ""
             }
           `
-          : '<div class="empty-state">No scanned feeds today.</div>'
+          : '<div class="empty-state">No additional feeds today.</div>'
       }
     </section>
   `;
@@ -1051,6 +1050,9 @@ function nljrAllLinksView() {
   const today = nljrFeed.today || {};
   const requestedDate = state.postPageId || today.date;
   const items = (requestedDate === today.date) ? (today.items || []) : [];
+  const recommended = nljrRecommendedItems(today);
+  const recommendedIds = new Set(recommended.map((item) => item.articleId || item.id));
+  const additional = items.filter((item) => !recommendedIds.has(item.articleId || item.id));
 
   return `
     <section class="panel nljr-edition-header">
@@ -1068,14 +1070,14 @@ function nljrAllLinksView() {
     <section class="panel">
       <div class="panel-header">
         <div>
-          <h3>All Scanned Articles (${items.length})</h3>
+          <h3>All Scanned Articles (${additional.length})</h3>
         </div>
       </div>
       ${
-        items.length
+        additional.length
           ? `
             <ul class="nljr-all-links-list" style="list-style-type: disc; padding-left: 20px; line-height: 1.8;">
-              ${items.map(item => `
+              ${additional.map(item => `
                 <li style="margin-bottom: 8px;">
                   <a href="${escapeHtml(item.url)}" target="_blank" style="font-weight: 500; text-decoration: underline;">${escapeHtml(item.title)}</a>
                   <span style="color: var(--muted); margin-left: 6px;">(Source: ${escapeHtml(item.sourceName)})</span>

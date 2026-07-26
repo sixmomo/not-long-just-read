@@ -2,7 +2,7 @@
   "meta": {
     "name": "NLJR Article Ledger",
     "description": "Tracks direct article URLs so processed items never appear again.",
-    "updatedAt": "2026-07-12"
+    "updatedAt": "2026-07-25"
   },
   "articles": [
     {
@@ -293,7 +293,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-demystifying-evals-for-ai-agents-414ce4b52e",
@@ -313,7 +315,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-ai-resistant-technical-evaluations-a8c29f7dce",
@@ -333,7 +337,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-building-c-compiler-c62e49f232",
@@ -353,7 +359,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-infrastructure-noise-9e0139d87d",
@@ -373,7 +381,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-eval-awareness-browsecomp-842accc117",
@@ -393,7 +403,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-harness-design-long-running-apps-2ef732b764",
@@ -413,7 +425,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-claude-code-auto-mode-b4c065a13b",
@@ -433,7 +447,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-managed-agents-f90fa6cabc",
@@ -453,7 +469,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-contextual-retrieval-02dab7c6a9",
@@ -473,7 +491,9 @@
         "Strategy signal"
       ],
       "priority": "high",
-      "status": "new"
+      "status": "processed",
+      "processedAt": "2026-07-25T17:38:27.550Z",
+      "includedIn": "2026-07-25"
     },
     {
       "id": "article-https-www-anthropic-com-engineering-building-effective-agents-7d24e5faa2",
