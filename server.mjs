@@ -1698,6 +1698,129 @@ async function generateImages(body) {
   return { ok: true, mode: "openai_api", model: imageModel, generated, post };
 }
 
+async function readRequestBodyBuffer(req) {
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+async function processVideoCaption(req) {
+  const apiKey = req.headers["x-gemini-api-key"] || process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("Gemini API Key is missing. Please provide it in settings or the .env file.");
+  }
+
+  const audioBuffer = await readRequestBodyBuffer(req);
+  if (!audioBuffer || audioBuffer.length === 0) {
+    throw new Error("Audio buffer is empty");
+  }
+
+  const startUrl = `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${apiKey}`;
+  const startResponse = await fetch(startUrl, {
+    method: "POST",
+    headers: {
+      "X-Goog-Upload-Protocol": "resumable",
+      "X-Goog-Upload-Command": "start",
+      "X-Goog-Upload-Header-Content-Length": audioBuffer.length.toString(),
+      "X-Goog-Upload-Header-Content-Type": "audio/wav",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      file: {
+        displayName: "audio.wav"
+      }
+    })
+  });
+
+  if (!startResponse.ok) {
+    const errorText = await startResponse.text();
+    throw new Error(`Failed to start upload: ${startResponse.status} ${errorText}`);
+  }
+
+  const uploadUrl = startResponse.headers.get("x-goog-upload-url");
+  if (!uploadUrl) {
+    throw new Error("Missing upload URL in response headers");
+  }
+
+  const uploadResponse = await fetch(uploadUrl, {
+    method: "POST",
+    headers: {
+      "X-Goog-Upload-Command": "upload, finalize",
+      "X-Goog-Upload-Offset": "0",
+      "Content-Type": "audio/wav"
+    },
+    body: audioBuffer
+  });
+
+  if (!uploadResponse.ok) {
+    const errorText = await uploadResponse.text();
+    throw new Error(`Failed to upload audio to Gemini File API: ${uploadResponse.status} ${errorText}`);
+  }
+
+  const uploadResult = await uploadResponse.json();
+  const fileUri = uploadResult.file?.uri;
+  const fileName = uploadResult.file?.name;
+  if (!fileUri || !fileName) {
+    throw new Error(`Upload succeeded but file metadata is missing: ${JSON.stringify(uploadResult)}`);
+  }
+
+  try {
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+    const promptText = "Transcribe the English speech in this audio file and translate it to Chinese. " +
+                       "Return the output as a JSON array of objects, where each object has fields: " +
+                       "'start' (number of seconds), 'end' (number of seconds), 'english' (original English text), and 'chinese' (Chinese translation). " +
+                       "Ensure start and end timestamps are precise numbers of seconds (e.g. 1.25). Translate accurately and maintain correct subtitle segmentation.";
+
+    const generateResponse = await fetch(geminiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                fileData: {
+                  mimeType: uploadResult.file.mimeType,
+                  fileUri: fileUri
+                }
+              },
+              {
+                text: promptText
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
+      })
+    });
+
+    if (!generateResponse.ok) {
+      const errorText = await generateResponse.text();
+      throw new Error(`Failed to generate subtitles from Gemini: ${generateResponse.status} ${errorText}`);
+    }
+
+    const generateResult = await generateResponse.json();
+    const textOutput = generateResult.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!textOutput) {
+      throw new Error(`Gemini response is empty or malformed: ${JSON.stringify(generateResult)}`);
+    }
+
+    const parsedData = JSON.parse(textOutput);
+    return { ok: true, subtitles: parsedData };
+  } finally {
+    const deleteUrl = `https://generativelanguage.googleapis.com/v1beta/${fileName}?key=${apiKey}`;
+    await fetch(deleteUrl, { method: "DELETE" }).catch(err => {
+      console.error("Cleanup failed for file", fileName, err);
+    });
+  }
+}
+
 async function handleApi(req, res, url) {
   try {
     if (req.method === "GET" && url.pathname === "/api/health") {
@@ -1790,6 +1913,9 @@ async function handleApi(req, res, url) {
     if (req.method === "POST" && url.pathname === "/api/generate-draft") {
       return send(res, 200, await generateDraft(await readRequestJson(req)));
     }
+    if (req.method === "POST" && url.pathname === "/api/video/caption/process") {
+      return send(res, 200, await processVideoCaption(req));
+    }
     return send(res, 404, { ok: false, error: "API route not found" });
   } catch (error) {
     return send(res, 500, { ok: false, error: error.message });
@@ -1808,6 +1934,8 @@ async function serveStatic(req, res, url) {
     pathname = "/ui/index.html";
   } else if (pathname === "/NLJR" || pathname === "/nljr") {
     pathname = "/ui/nljr.html";
+  } else if (pathname === "/videocaption" || pathname === "/videocaption/") {
+    pathname = "/videocaption/videocaption.html";
   }
 
   if (pathname.startsWith("/not-long-just-read/content_pipeline/") || pathname === "/not-long-just-read/NLJR.md") {
