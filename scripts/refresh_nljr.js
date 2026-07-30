@@ -493,7 +493,79 @@ function buildTopicAngle(article, source) {
   const fallbackSummary = summaryFromContent(pageData.description, pageData.paragraphs);
   const finalFallback = fallbackSummary || sentenceTrim(pageData.description || `${title} is a new post from ${source.name || "this source"}.`, 700);
 
-  if (process.env.OPENAI_API_KEY) {
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      console.log(`Using Gemini to summarize: ${title}...`);
+      const contentToSummarize = `Title: ${title}\nDescription: ${pageData.description}\n\nContent:\n${pageData.paragraphs.slice(0, 12).join("\n\n")}`;
+      
+      const systemPrompt = `Act as a professional newsletter curator. Based on the 24-hour new updates from subscription list, including newsletters, or technical deep dives. Please extract and format the core information into a 'Not-Long-Just-Read' daily briefing using the following structure:
+The Hook/TL;DR: Start with a one-sentence summary of the main topic.
+The Core Insight: Provide one punchy, high-level takeaway that explains the 'why' or 'so what.'
+Key Takeaways (List): Provide 3-5 numbered bullet points. Each point should be concise (1-2 sentences) and focus on actionable insights, specific tools mentioned, or clear shifts in strategy.
+Actionable Workflows: If the source material describes a specific process or tool setup, summarize it in a 1-2 sentence 'How-To' format. (If there are no workflows, omit this section).
+Closing Thought: One sentence summarizing the broader implication of this content for a professional or builder.
+
+Tone & Style Guidelines:
+Maintain an expert, direct, and efficient voice.
+Prioritize clarity over fluff; remove all marketing preamble.
+If technical terms are used, ensure they are contextualized simply.
+Do not include links, ads, or promotional content.`;
+
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+      const apiRes = await fetch(geminiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Please summarize this article:\n\n${contentToSummarize}`
+                }
+              ]
+            }
+          ],
+          systemInstruction: {
+            parts: [
+              {
+                text: systemPrompt
+              }
+            ]
+          },
+          generationConfig: {
+            temperature: 0.3
+          }
+        })
+      });
+
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        const llmSummary = apiData.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (llmSummary) {
+          article.summary = llmSummary.trim();
+          
+          const hookMatch = article.summary.match(/The Hook\/TL;DR:\s*(.*)/i);
+          article.conciseSummary = hookMatch ? hookMatch[1].trim() : sentenceTrim(splitSentences(article.summary).slice(0, 2).join(" "), 280);
+          
+          const coreInsightMatch = article.summary.match(/The Core Insight:\s*(.*)/i);
+          article.whyItMatters = coreInsightMatch ? coreInsightMatch[1].trim() : buildWhyItMatters(article, source);
+          article.conciseWhyRelevant = buildConciseWhyRelevant(article, source);
+          article.topicAngle = buildTopicAngle(article, source);
+          article.relevance = source.relevance || article.relevance || ["Strategy"];
+          article.suggestedUse = buildSuggestedUse(source);
+          article.priority = source.priority || article.priority || "medium";
+          return;
+        }
+      } else {
+        const errText = await apiRes.text();
+        console.error(`Gemini API failed: HTTP ${apiRes.status} ${errText}`);
+      }
+    } catch (err) {
+      console.error("Gemini summarization failed, using local fallback:", err.message);
+    }
+  } else if (process.env.OPENAI_API_KEY) {
     try {
       console.log(`Using OpenAI to summarize: ${title}...`);
       const contentToSummarize = `Title: ${title}\nDescription: ${pageData.description}\n\nContent:\n${pageData.paragraphs.slice(0, 12).join("\n\n")}`;
@@ -862,6 +934,70 @@ export async function refresh(dryRun = false) {
   const feedArticles = sortFeedArticles(processedArticles).slice(0, TOP_ITEM_LIMIT);
   const items = feedArticles.map((article, index) => buildFeedItem(article, date, index));
 
+  let executiveSummary = "";
+  if (items.length > 0 && process.env.GEMINI_API_KEY) {
+    try {
+      console.log("Generating daily executive summary via Gemini...");
+      const summariesText = items.map((item, idx) => `[Article ${idx + 1}]
+Title: ${item.title}
+Source: ${item.sourceName}
+URL: ${item.url || "N/A"}
+Summary: ${item.summary}
+`).join("\n\n");
+
+      const execPrompt = `Act as an expert strategic curator. Review today's daily NLJR feed items and compile a concise 24-Hour Executive Summary (around 3-4 sentences).
+Highlight the convergence of themes, structural shifts, or key takeaways across the articles.
+IMPORTANT: You MUST include clickable markdown links for each discussed article using their title or source, strictly matching their exact URL provided in the input, briefly mentioning who or which source provided that point.
+Format example: 'Today's feed highlights a structural convergence between the physical bottlenecks of the AI economy (explored in Moses Sternstein's a16z post: [Charts of the Week: Are semis cheap?](https://www.a16z.news/...)) and...'
+
+Tone & Style:
+- Expert, analytical, and highly direct.
+- No fluff or boilerplate introduction. Just start directly with the summary content.`;
+
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+      const apiRes = await fetch(geminiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Compile the daily executive summary for these articles:\n\n${summariesText}`
+                }
+              ]
+            }
+          ],
+          systemInstruction: {
+            parts: [
+              {
+                text: execPrompt
+              }
+            ]
+          },
+          generationConfig: {
+            temperature: 0.3
+          }
+        })
+      });
+
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        const llmSummary = apiData.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (llmSummary) {
+          executiveSummary = llmSummary.trim();
+        }
+      } else {
+        const errText = await apiRes.text();
+        console.error(`Gemini executive summary generation failed: HTTP ${apiRes.status} ${errText}`);
+      }
+    } catch (err) {
+      console.error("Gemini executive summary generation failed:", err.message);
+    }
+  }
+
   if (!dryRun) {
     if (ledger.meta) ledger.meta.updatedAt = date;
     if (registry.meta) registry.meta.updatedAt = date;
@@ -873,6 +1009,7 @@ export async function refresh(dryRun = false) {
     generatedAt: scanTime,
     items,
     recommendedItemIds: items.slice(0, RECOMMENDED_LIMIT).map(item => item.articleId || item.id),
+    executiveSummary,
     sourceHealth: {
       activeSources: activeSources.length,
       activeSubscriptions: activeSubscriptions.length,

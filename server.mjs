@@ -841,13 +841,78 @@ async function generateNLJRFeed() {
       : article,
   );
   await saveNLJRArticleLedger(ledger);
+  let executiveSummary = "";
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (items.length > 0 && apiKey) {
+    try {
+      console.log("Generating daily executive summary via Gemini...");
+      const summariesText = items.map((item, idx) => `[Article ${idx + 1}]
+Title: ${item.title}
+Source: ${item.sourceName}
+URL: ${item.url || "N/A"}
+Summary: ${item.summary}
+`).join("\n\n");
+
+      const execPrompt = `Act as an expert strategic curator. Review today's daily NLJR feed items and compile a concise 24-Hour Executive Summary (around 3-4 sentences).
+Highlight the convergence of themes, structural shifts, or key takeaways across the articles.
+IMPORTANT: You MUST include clickable markdown links for each discussed article using their title or source, strictly matching their exact URL provided in the input, briefly mentioning who or which source provided that point.
+Format example: 'Today's feed highlights a structural convergence between the physical bottlenecks of the AI economy (explored in Moses Sternstein's a16z post: [Charts of the Week: Are semis cheap?](https://www.a16z.news/...)) and...'
+
+Tone & Style:
+- Expert, analytical, and highly direct.
+- No fluff or boilerplate introduction. Just start directly with the summary content.`;
+
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+      const apiRes = await fetch(geminiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Compile the daily executive summary for these articles:\n\n${summariesText}`
+                }
+              ]
+            }
+          ],
+          systemInstruction: {
+            parts: [
+              {
+                text: execPrompt
+              }
+            ]
+          },
+          generationConfig: {
+            temperature: 0.3
+          }
+        })
+      });
+
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        const llmSummary = apiData.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (llmSummary) {
+          executiveSummary = llmSummary.trim();
+        }
+      } else {
+        const errText = await apiRes.text();
+        console.error(`Gemini executive summary generation failed: HTTP ${apiRes.status} ${errText}`);
+      }
+    } catch (err) {
+      console.error("Gemini executive summary generation failed:", err.message);
+    }
+  }
+
   const todayFeed = {
     date,
     status: items.length ? "generated" : "no_new_posts",
     generatedAt,
     items,
     recommendedItemIds: items.slice(0, 3).map((item) => item.articleId || item.id),
-    executiveSummary: "",
+    executiveSummary,
     sourceHealth: {
       activeSources: activeSources.length,
       activeSubscriptions: subscriptions.length,
